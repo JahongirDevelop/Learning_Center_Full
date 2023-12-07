@@ -24,19 +24,26 @@ public class AttendanceController {
 //        return ResponseEntity.status(200).body(attendanceService.create(attendanceCr));
 //    }
 
+
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+
     @GetMapping("/get_student_attendances/{student_id}")
     public ResponseEntity<List<LessonAttendanceResponse>> getStudentAttendances(
             @PathVariable UUID student_id) {
         return ResponseEntity.ok(attendanceService.getStudentAttendances(student_id));
     }
+
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+
     @GetMapping("getAllAttendancesWithLesson{group_id}")
     public ResponseEntity<List<LessonAttendanceResponse>> getAllAttendancesWithLesson(
             @PathVariable UUID group_id){
         return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id));
     }
+
+
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+
     @GetMapping("getAttendanceWithLessonByModule{group_id}")
     private ResponseEntity<List<LessonAttendanceResponse>> getAttendanceWithLessonByModule(@PathVariable UUID group_id){
         return ResponseEntity.ok(attendanceService.getAttendanceWithLessonByModule(group_id));
