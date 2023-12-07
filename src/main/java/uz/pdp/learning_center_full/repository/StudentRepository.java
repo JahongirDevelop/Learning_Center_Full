@@ -12,6 +12,7 @@ public interface StudentRepository extends JpaRepository<StudentInfo, UUID> {
    // boolean existsByEmail(String email);
     List<StudentInfo> findAllByGroupId(UUID groupId);
 
+
     //List<StudentInfo> findByName(String name);
 //    ResponseEntity<List<StudentInfo>> findAllByGroupId(Pageable pageable,UUID groupID);
 }
