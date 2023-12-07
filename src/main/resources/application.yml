@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    password: doni2045
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/learning_center_management_full
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kimsanov0717@gmail.com
+    password: dtqzcdtmbywmsnoo
+    properties:
+      mjaail:
+        smtp:
+          auth: true
+      mail:
+        smtp:
+          starttls:
+            enable: true
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger
+    tags-sorter: alpha
+    operations-sorter: alpha
+    disable-swagger-default-url: true
+    doc-expansion: none
+
+jwt:
+  expiry: 900000
+  secret: gjhkoiutrefdsavzbxcnmktjyhretgwedfvbnjkrjyerhsfg
+
