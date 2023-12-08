@@ -33,16 +33,18 @@ public class StudentController {
     }
 //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
-    public List<StudentResponse> getAll(
+    public ResponseEntity<List<StudentResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
-        return studentService.getAll(page, size);
+        return ResponseEntity.status(200).body(studentService.getAll(page, size));
     }
+
 //    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping("/get-group-students/{group_id}")
-//    public List<StudentResponse> getGroupStudents(@PathVariable UUID group_id){
-//        return studentService.getByGroupId(group_id);
-//    }
+    @GetMapping("/get-group-students/{group_id}")
+    public ResponseEntity<List<StudentResponse>> getGroupStudents(@PathVariable UUID group_id){
+        return ResponseEntity.status(200).body(studentService.getByGroupId(group_id));
+    }
+
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create_by_application")
     public ResponseEntity<StudentResponse> createByApplication(@RequestParam UUID application_id, UUID group_id){

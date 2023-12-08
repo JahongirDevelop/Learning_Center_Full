@@ -8,12 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.StudentCR;
+import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
 import uz.pdp.learning_center_full.dto.response.StudentUpdateDTO;
-import uz.pdp.learning_center_full.entity.ApplicationEntity;
-import uz.pdp.learning_center_full.entity.GroupEntity;
-import uz.pdp.learning_center_full.entity.StudentInfo;
-import uz.pdp.learning_center_full.entity.UserEntity;
+import uz.pdp.learning_center_full.entity.*;
 import uz.pdp.learning_center_full.entity.enums.UserRole;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
 import uz.pdp.learning_center_full.exception.DuplicateValueException;
@@ -26,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,8 +105,8 @@ public class StudentService {
 
     public List<StudentResponse> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<UserEntity> studentEntities = userRepository.findAllByRole(UserRole.STUDENT).getContent();
-        return modelMapper.map(studentEntities, new TypeToken<List<StudentResponse>>() {}.getType());
+        List<UserEntity> all = userRepository.findAllByRole(UserRole.STUDENT, pageable).getContent();
+        return modelMapper.map(all, new TypeToken<List<StudentResponse>>() {}.getType());
     }
 
     public StudentResponse updateById(UUID studentId, StudentUpdateDTO update) {
@@ -145,5 +144,26 @@ public class StudentService {
             }
         }return false;
     }
+
+
+    public List<StudentResponse> getByGroupId(UUID groupId) {
+
+        List<StudentInfo> studentInfoList = studentRepository.findAllByGroupId(groupId);
+        List<StudentResponse> studentResponses = studentInfoList.stream()
+                .map(student -> new StudentResponse(
+                        student.getRating(),
+                        student.getUserEntity().getName(),
+                        student.getUserEntity().getSurname(),
+                        student.getUserEntity().getPhoneNumber(),
+                        student.getUserEntity().getEmail(),
+                        student.getGroupId(),
+                        student.getUserEntity().getId()
+                ))
+                .collect(Collectors.toList());
+        return studentResponses;
+
+    }
+
+
 }
 
