@@ -5,12 +5,15 @@ import org.springframework.stereotype.Repository;
 import uz.pdp.learning_center_full.entity.StudentInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentInfo, UUID> {
    // boolean existsByEmail(String email);
     List<StudentInfo> findAllByGroupId(UUID groupId);
+
+    Optional<StudentInfo> findStudentInfoByUserEntityId(UUID id);
 
 
     //List<StudentInfo> findByName(String name);
