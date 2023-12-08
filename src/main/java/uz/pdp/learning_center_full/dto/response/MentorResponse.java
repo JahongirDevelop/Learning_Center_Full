@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+
 public class MentorResponse {
     private String name;
     private String surname;
@@ -22,4 +23,5 @@ public class MentorResponse {
 //    private Double salary;
 //    private Subject subject;
     private UUID id;
+
 }
