@@ -12,6 +12,7 @@ import uz.pdp.learning_center_full.entity.enums.Subject;
 public class MentorUpdate {
     private String name;
     private String surname;
+    private String password;
     @Email
     private String email;
     private String phoneNumber;

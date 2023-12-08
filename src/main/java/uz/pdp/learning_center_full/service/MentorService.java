@@ -86,12 +86,10 @@ public class MentorService {
                 if (userEntity != null) {
                     userRepository.deleteById(userEntity.getId());
                 }
-
                 return ResponseEntity.status(HttpStatus.OK).body("Deleted");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mentor Not found");
             }
-
         } catch (Exception e) {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting");
@@ -100,14 +98,40 @@ public class MentorService {
     }
 
 
-    public ResponseEntity<MentorResponse> update(UUID mentorId, MentorUpdate mentorCr) {
-        MentorInfo mentorEntity = mentorRepository
-                .findById(mentorId)
-                .orElseThrow( () -> new DataNotFoundException("Invalid value"));
-        modelMapper.map(mentorCr,mentorEntity);
-        mentorRepository.save(mentorEntity);
-        return ResponseEntity.ok(modelMapper.map(mentorEntity,MentorResponse.class));
+    public ResponseEntity<MentorResponse> update(UUID mentorId, MentorUpdate updatedMentorInfo) {
+        try {
+            Optional<MentorInfo> mentorInfoOptional = mentorRepository.findById(mentorId);
+
+            if (mentorInfoOptional.isPresent()) {
+                MentorInfo existingMentorInfo = mentorInfoOptional.get();
+                existingMentorInfo.setExperience(updatedMentorInfo.getExperience());
+                UUID userId = mentorInfoOptional.get().getUserEntity().getId();
+                Optional<UserEntity> byId = userRepository.findById(userId);
+                byId.get().setEmail(updatedMentorInfo.getEmail());
+                byId.get().setSurname(updatedMentorInfo.getSurname());
+                byId.get().setPassword(updatedMentorInfo.getPassword());
+                byId.get().setName(updatedMentorInfo.getName());
+                byId.get().setPhoneNumber(updatedMentorInfo.getPhoneNumber());
+                userRepository.save(byId.get());
+                mentorRepository.save(existingMentorInfo);
+                MentorResponse updatedMentorResponse = new MentorResponse();
+                updatedMentorResponse.setEmail(updatedMentorInfo.getEmail());
+                updatedMentorResponse.setSurname(updatedMentorInfo.getSurname());
+                updatedMentorResponse.setName(updatedMentorInfo.getName());
+                updatedMentorResponse.setPhoneNumber(updatedMentorInfo.getPhoneNumber());
+                        updatedMentorResponse.setId(existingMentorInfo.getId());
+                       updatedMentorResponse.setExperience(existingMentorInfo.getExperience());
+                return ResponseEntity.status(HttpStatus.OK).body(updatedMentorResponse);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
 
     }
+
+
 
 }
