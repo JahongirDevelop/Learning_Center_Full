@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.StudentCR;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
@@ -18,12 +19,12 @@ import java.util.UUID;
 @RequestMapping("api/v1/students")
 public class StudentController {
     private final StudentService studentService;
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentCR studentCR) {
         return ResponseEntity.status(200).body(studentService.create(studentCR));
     }
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<StudentResponse> update(
             @RequestParam UUID studentId,
@@ -36,7 +37,7 @@ public class StudentController {
         return ResponseEntity.status(200).body(studentService.deleteById(studentId));
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<StudentResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -44,13 +45,13 @@ public class StudentController {
         return ResponseEntity.status(200).body(studentService.getAll(page, size));
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-group-students/{group_id}")
     public ResponseEntity<List<StudentResponse>> getGroupStudents(@PathVariable UUID group_id){
         return ResponseEntity.status(200).body(studentService.getByGroupId(group_id));
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create_by_application")
     public ResponseEntity<StudentResponse> createByApplication(@RequestParam UUID application_id, UUID group_id){
         return studentService.createByApplication(application_id,group_id);
