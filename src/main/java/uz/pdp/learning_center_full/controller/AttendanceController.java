@@ -3,6 +3,7 @@ package uz.pdp.learning_center_full.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ public class AttendanceController {
 //    }
 
 
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
 
     @GetMapping("/get_student_attendances/{student_id}")
     public ResponseEntity<List<LessonAttendanceResponse>> getStudentAttendances(
@@ -33,7 +34,7 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getStudentAttendances(student_id));
     }
 
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
 
     @GetMapping("getAllAttendancesWithLesson{group_id}")
     public ResponseEntity<List<LessonAttendanceResponse>> getAllAttendancesWithLesson(
@@ -42,7 +43,7 @@ public class AttendanceController {
     }
 
 
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
 
     @GetMapping("getAttendanceWithLessonByModule{group_id}")
     private ResponseEntity<List<LessonAttendanceResponse>> getAttendanceWithLessonByModule(@PathVariable UUID group_id){
