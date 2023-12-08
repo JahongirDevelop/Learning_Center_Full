@@ -2,14 +2,16 @@ package uz.pdp.learning_center_full.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.StudentCR;
+import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
-import uz.pdp.learning_center_full.entity.ApplicationEntity;
-import uz.pdp.learning_center_full.entity.GroupEntity;
-import uz.pdp.learning_center_full.entity.StudentInfo;
-import uz.pdp.learning_center_full.entity.UserEntity;
+import uz.pdp.learning_center_full.dto.response.StudentUpdateDTO;
+import uz.pdp.learning_center_full.entity.*;
 import uz.pdp.learning_center_full.entity.enums.UserRole;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
 import uz.pdp.learning_center_full.exception.DuplicateValueException;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,11 +68,9 @@ public class StudentService {
     public ResponseEntity<StudentResponse> createByApplication(UUID applicationID, UUID groupID) {
         if(!applicationRepository.existsById(applicationID)) {
             throw new DataNotFoundException("Application not found by this id " + applicationID);
-        }
-        else if (!groupRepository.existsById(groupID)){
+        } else if (!groupRepository.existsById(groupID)){
             throw new DataNotFoundException("Group not found by this id " + groupID);
-        }
-        else {
+        } else {
             ApplicationEntity application = applicationRepository.findById(applicationID).get();
             StudentCR studentCR = modelMapper.map(application,StudentCR.class);
             studentCR.setGroupId(groupID);
@@ -90,7 +91,6 @@ public class StudentService {
             StudentInfo studentEntity = modelMapper.map(studentCR, StudentInfo.class);
             studentEntity.setUserEntity(save);
 
-
             StudentResponse studentResponse = new StudentResponse(studentCR.getRating(), userEntity.getName(),
                     userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
                     studentCR.getGroupId(), userEntity.getId());
@@ -99,9 +99,39 @@ public class StudentService {
             updateGroup.get().setStudentCount(updateGroup.get().getStudentCount()+1);
             groupRepository.save(modelMapper.map(updateGroup, GroupEntity.class));
              studentRepository.save(studentEntity);
-
             return ResponseEntity.ok(studentResponse);
         }
+    }
+
+    public List<StudentResponse> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<UserEntity> all = userRepository.findAllByRole(UserRole.STUDENT, pageable).getContent();
+        return modelMapper.map(all, new TypeToken<List<StudentResponse>>() {}.getType());
+    }
+
+    public StudentResponse updateById(UUID studentId, StudentUpdateDTO update) {
+        StudentInfo student = studentRepository
+                .findById(studentId)
+                .orElseThrow( () -> new DataNotFoundException("student not found"));
+
+        UserEntity userEntity = userRepository.findById(student.getUserEntity().getId())
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+
+        userEntity.setEmail(update.getEmail());
+        userEntity.setName(update.getName());
+        userEntity.setPassword(update.getPassword());
+        userEntity.setPhoneNumber(update.getPhoneNumber());
+        userEntity.setSurname(update.getSurname());
+        userEntity.setRole(UserRole.STUDENT);
+
+        student.setUserEntity(userEntity);
+        student.setRating(update.getRating());
+        student.setGroupId(update.getGroupId());
+        studentRepository.save(student);
+        return new StudentResponse(student.getRating(), userEntity.getName(),
+                userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
+                student.getGroupId(), userEntity.getId());
+
     }
 
     private boolean checkStudentIsExist(StudentCR studentCR){
@@ -114,5 +144,26 @@ public class StudentService {
             }
         }return false;
     }
+
+
+    public List<StudentResponse> getByGroupId(UUID groupId) {
+
+        List<StudentInfo> studentInfoList = studentRepository.findAllByGroupId(groupId);
+        List<StudentResponse> studentResponses = studentInfoList.stream()
+                .map(student -> new StudentResponse(
+                        student.getRating(),
+                        student.getUserEntity().getName(),
+                        student.getUserEntity().getSurname(),
+                        student.getUserEntity().getPhoneNumber(),
+                        student.getUserEntity().getEmail(),
+                        student.getGroupId(),
+                        student.getUserEntity().getId()
+                ))
+                .collect(Collectors.toList());
+        return studentResponses;
+
+    }
+
+
 }
 

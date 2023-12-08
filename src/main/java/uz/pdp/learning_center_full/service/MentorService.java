@@ -35,7 +35,7 @@ public class MentorService {
                     .name(mentorCr.getName())
                     .surname(mentorCr.getSurname())
                     .email(mentorCr.getEmail())
-                   .password(verificationCode) // Şifrelenmiş olarak sakla
+                   .password(verificationCode)
                     .phoneNumber(mentorCr.getPhoneNumber())
                     .role(UserRole.MENTOR)
                     .build();
@@ -51,16 +51,7 @@ public class MentorService {
         return   ResponseEntity.ok(modelMapper.map(userEntity,MentorResponse.class));
     }
 
-//            String verificationCode = senderService.sendVerificationCode(mentorCr.getEmail());;
-//            MentorEntity mentorEntity = modelMapper.map(mentorCr, MentorEntity.class);
-//            mentorEntity.setPassword(verificationCode);
-//            mentorEntity.setRole(UserRole.MENTOR);
-//            mentorRepository.save(mentorEntity);
-//            System.out.println("verificationCode = " + verificationCode);
-//            return ResponseEntity.ok(modelMapper.map(mentorEntity,MentorResponse.class));
-//
-//    }
-//
+
     public ResponseEntity<MentorResponse> getById(UUID mentorID) {
         UserEntity userEntity = userRepository.findById(mentorID).get();
         MentorInfo mentorEntity = mentorRepository.findMentorInfoByUserEntityId(mentorID)
