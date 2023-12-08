@@ -19,7 +19,7 @@ public class MentorResponse {
     private String email;
     private String phoneNumber;
     private int experience;
-    private Double salary;
-    private Subject subject;
+//    private Double salary;
+//    private Subject subject;
     private UUID id;
 }

@@ -17,7 +17,9 @@ import java.util.UUID;
 @RequestMapping("/api/v1/course")
 public class CourseController {
     private final CourseService courseService;
+
 //    @PreAuthorize("hasRole('ADMIN')")
+
     @PostMapping("/create")
     public ResponseEntity<CourseResponse> create(@RequestBody @Valid CourseCr courseCr) {
         return ResponseEntity.ok(courseService.create(courseCr));
