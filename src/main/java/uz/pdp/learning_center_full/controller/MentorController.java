@@ -2,6 +2,7 @@ package uz.pdp.learning_center_full.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.MentorCr;
 import uz.pdp.learning_center_full.dto.request.MentorUpdate;
@@ -16,27 +17,30 @@ import java.util.UUID;
 @RequestMapping("api/v1/mentors")
 public class MentorController {
     private final MentorService mentorService;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<MentorResponse> addMentor(@RequestBody MentorCr mentorCr) {
         return mentorService.addMentor(mentorCr);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_by_id/{mentor_id}")
     public ResponseEntity<MentorResponse> getByID(@PathVariable UUID mentor_id){
         return mentorService.getById(mentor_id);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_all")
     public ResponseEntity<List<MentorResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
         return mentorService.getAll(page,size);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete_by_id/{mentor_id}")
     public ResponseEntity<String> deleteByID(@PathVariable UUID mentor_id){
         return mentorService.deleteByID(mentor_id);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
         return mentorService.update(mentorId,mentorUp);
