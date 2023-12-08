@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.MentorCr;
+import uz.pdp.learning_center_full.dto.request.MentorUpdate;
 import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.service.MentorService;
 
@@ -32,14 +33,14 @@ public class MentorController {
             @RequestParam(defaultValue = "10") int size){
         return mentorService.getAll(page,size);
     }
-//    @DeleteMapping("/delete_by_id/{mentor_id}")
-//    public ResponseEntity<String> deleteByID(@PathVariable UUID mentor_id){
-//        return mentorService.deleteByID(mentor_id);
-//    }
-//    @PutMapping("/update")
-//    public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorCr mentorCr){
-//        return mentorService.update(mentorId,mentorCr);
-//    }
+    @DeleteMapping("/delete_by_id/{mentor_id}")
+    public ResponseEntity<String> deleteByID(@PathVariable UUID mentor_id){
+        return mentorService.deleteByID(mentor_id);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
+        return mentorService.update(mentorId,mentorUp);
+    }
 
 
 }
