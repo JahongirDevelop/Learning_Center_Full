@@ -50,5 +50,4 @@ public class LessonController {
          return lessonService.finishLesson(attendanceCrList);
     }
 
-
 }
