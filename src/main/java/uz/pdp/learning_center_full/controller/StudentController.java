@@ -27,10 +27,15 @@ public class StudentController {
     @PutMapping("/update")
     public ResponseEntity<StudentResponse> update(
             @RequestParam UUID studentId,
-            @RequestBody StudentUpdateDTO update
-    ) {
+            @RequestBody StudentUpdateDTO update) {
         return ResponseEntity.status(200).body(studentService.updateById(studentId, update));
     }
+
+    @DeleteMapping("delete/{studentId}")
+    public ResponseEntity<String> deleteStudentById(@PathVariable UUID studentId) {
+        return ResponseEntity.status(200).body(studentService.deleteById(studentId));
+    }
+
 //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<StudentResponse>> getAll(
@@ -52,15 +57,4 @@ public class StudentController {
     }
 
 
-
-
-
-//    @GetMapping("/get-group-students/{group_id}")
-//    public ResponseEntity<List<StudentEntity>> getGroupStudents(
-//            @PathVariable UUID group_id,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size
-//    ){
-//        return studentService.getByGroupId(page,size,group_id);
-//    }s
 }
