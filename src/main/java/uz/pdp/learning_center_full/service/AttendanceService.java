@@ -19,10 +19,7 @@ import uz.pdp.learning_center_full.repository.AttendanceRepository;
 import uz.pdp.learning_center_full.repository.LessonRepository;
 import uz.pdp.learning_center_full.repository.StudentRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -32,6 +29,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final LessonRepository lessonRepository;
     private final StudentRepository studentRepository;
+
     public AttendanceResponse create(AttendanceCr attendanceDto) {
         checkLesson(attendanceDto.getLessonId());
         checkStudent(attendanceDto.getStudentId());
@@ -45,12 +43,19 @@ public class AttendanceService {
 
     }
     public ResponseEntity<String> createAttendances(List<AttendanceCr> attendanceDtoList) {
+        List<StudentInfo> all = studentRepository.findAll();
+
         for (AttendanceCr attendanceDto : attendanceDtoList) {
             checkLesson(attendanceDto.getLessonId());
             checkStudent(attendanceDto.getStudentId());
             checkAttendance(attendanceDto);
+
         }
+
         for (AttendanceCr attendanceDto : attendanceDtoList) {
+            StudentInfo byId = studentRepository.findById(attendanceDto.getStudentId()).get();
+            byId.setRating(byId.getRating()+attendanceDto.getPoints());
+            studentRepository.save(byId);
             attendanceRepository.save(modelMapper.map(attendanceDto,AttendanceEntity.class));
         }
         return ResponseEntity.ok("Saved");

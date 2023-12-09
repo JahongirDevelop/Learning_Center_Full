@@ -50,7 +50,7 @@ public class GroupService {
         group.setStudentCount(0);
         group.setCourseId(groupCr.getCourseId());
         group.setMentorId(groupCr.getMentorId());
-        group.setModule(0);
+        group.setModule(1);
         group.setStatus(GroupStatus.CREATED);
          GroupEntity groupEntity = groupRepository.save(modelMapper.map(group, GroupEntity.class));
          group.setId(groupEntity.getId());

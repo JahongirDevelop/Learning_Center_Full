@@ -13,7 +13,6 @@ import java.util.UUID;
 public class StudentCR {
     private String name;
     private String surname;
-    private int rating;
     private String phoneNumber;
     private String email;
     private UUID groupId;

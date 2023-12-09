@@ -14,4 +14,5 @@ public class AttendanceCr {
     private UUID groupId;
     private boolean isExist;
     private String description;
+    private int points;
 }
