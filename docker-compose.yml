@@ -4,21 +4,19 @@ services:
   app:
     build: ./
     ports:
-      - "8080:8080"
+      - "8081:8082"
     environment:
       DB_IP: db
-      DB_NAME: learning_center_management_full
+      DB_NAME: postgres
       DB_PASSWORD: 1
     depends_on:
       - db
   db:
     image: postgres
-    ports:
-      - "5433:5432"
     environment:
       POSTGRES_PASSWORD: 1
       POSTGRES_USERNAME: postgres
-      POSTGRES_DB: learning_center_management_full
+      POSTGRES_DB: learning_center_db
     volumes:
       - pg_data:/var/lib/postgresql/data
 volumes:
