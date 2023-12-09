@@ -1,8 +1,10 @@
 spring:
   datasource:
-    password: doni2045
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/learning_center_management_full
+    password: ${DB_PASSWORD:1}
+    username: ${DB_USERNAME:postgres}
+    url: jdbc:postgresql://${DP_IP:localhost}:${DB_PORT:5432}/${DB_NAME:learning_center_management_full}
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
