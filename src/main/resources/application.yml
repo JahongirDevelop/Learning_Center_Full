@@ -3,6 +3,7 @@ spring:
     password: ${DB_PASSWORD:1}
     username: ${DB_USERNAME:postgres}
     url: jdbc:postgresql://${DP_IP:localhost}:${DB_PORT:5432}/${DB_NAME:learning_center_management_full}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
