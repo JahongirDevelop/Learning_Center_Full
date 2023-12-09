@@ -62,12 +62,14 @@ public class StudentService {
                 groupEntity.setStudentCount(groupEntity.getStudentCount() + 1);
                 groupRepository.save(groupEntity);
                 StudentInfo studentInfo = StudentInfo.builder()
-                        .rating(studentCR.getRating())
+                        .rating(0)
                         .groupId(studentCR.getGroupId())
                         .userEntity(userEntity)
                         .build();
                 studentRepository.save(studentInfo);
-                return modelMapper.map(userEntity, StudentResponse.class);
+                StudentResponse studentResponse = new StudentResponse(0, userEntity.getName(),userEntity.getSurname(),
+                        userEntity.getPhoneNumber(), userEntity.getEmail(), studentCR.getGroupId(),userEntity.getId());
+                return studentResponse;
             }
         }
     }
@@ -103,7 +105,7 @@ public class StudentService {
                 StudentInfo studentEntity = modelMapper.map(studentCR, StudentInfo.class);
                 studentEntity.setUserEntity(save);
 
-                StudentResponse studentResponse = new StudentResponse(studentCR.getRating(), userEntity.getName(),
+                StudentResponse studentResponse = new StudentResponse(0, userEntity.getName(),
                         userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
                         studentCR.getGroupId(), userEntity.getId());
 

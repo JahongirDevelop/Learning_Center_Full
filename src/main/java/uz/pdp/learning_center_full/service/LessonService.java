@@ -13,6 +13,7 @@ import uz.pdp.learning_center_full.dto.response.LessonResponse;
 import uz.pdp.learning_center_full.entity.CourseEntity;
 import uz.pdp.learning_center_full.entity.GroupEntity;
 import uz.pdp.learning_center_full.entity.LessonEntity;
+import uz.pdp.learning_center_full.entity.StudentInfo;
 import uz.pdp.learning_center_full.entity.enums.GroupStatus;
 import uz.pdp.learning_center_full.entity.enums.LessonStatus;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
@@ -20,6 +21,7 @@ import uz.pdp.learning_center_full.repository.CourseRepository;
 
 import uz.pdp.learning_center_full.repository.GroupRepository;
 import uz.pdp.learning_center_full.repository.LessonRepository;
+import uz.pdp.learning_center_full.repository.StudentRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,11 +29,14 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class LessonService {
+
+
     private final LessonRepository lessonRepository;
     private final ModelMapper modelMapper;
     private final GroupRepository groupRepository;
     private final CourseRepository courseRepository;
     private final AttendanceService attendanceService;
+    private final StudentRepository studentRepository;
 
     public LessonResponse create(LessonCR lessonCR) {
         LessonEntity lessonEntity = modelMapper.map(lessonCR, LessonEntity.class);
@@ -61,6 +66,7 @@ public class LessonService {
     public ResponseEntity<String> finishLesson(List<AttendanceCr> attendanceCrList) {
         LessonEntity lessonEntity = lessonRepository.findById(attendanceCrList.get(0).getLessonId())
                 .orElseThrow(() -> new DataNotFoundException("Lesson not found! " + attendanceCrList));
+
         lessonEntity.setLessonStatus(LessonStatus.FINISHED);
         lessonRepository.save(lessonEntity);
         GroupEntity group = groupRepository.findById(lessonEntity.getGroupId()).get();

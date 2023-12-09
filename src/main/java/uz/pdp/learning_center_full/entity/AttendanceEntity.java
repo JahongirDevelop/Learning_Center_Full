@@ -12,9 +12,13 @@ import java.util.UUID;
 @Setter
 @Builder
 public class AttendanceEntity extends BaseEntity {
+
+
+
     private UUID lessonId;
     private UUID studentId;
     private UUID groupId;
     private boolean isExist;
     private String description; // sabab
+    private int points;
 }
