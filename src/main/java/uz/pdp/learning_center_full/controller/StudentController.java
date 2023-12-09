@@ -56,6 +56,11 @@ public class StudentController {
     public ResponseEntity<StudentResponse> createByApplication(@RequestParam UUID application_id, UUID group_id){
         return studentService.createByApplication(application_id,group_id);
     }
+    @PreAuthorize("hasRole('MENTOR') or hasRole('ADMIN') or hasRole('STUDENT')")
+    @GetMapping("/get_students_by_rating")
+    public ResponseEntity<List<StudentResponse>> getStudentByRating(UUID groupId){
+        return ResponseEntity.status(200).body(studentService.getStudentByRating(groupId));
+    }
 
 
 }
