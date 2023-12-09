@@ -24,6 +24,5 @@ public class StudentInfo extends BaseEntity {
 //    @JoinColumn()
     private UserEntity userEntity;
 
-    @ManyToOne
-    private UserEntity parent;
+
 }
