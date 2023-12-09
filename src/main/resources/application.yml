@@ -1,6 +1,6 @@
 spring:
   datasource:
-    password: 2004
+    password: 1
     username: postgres
     url: jdbc:postgresql://localhost:5432/learning_center_management_full
   jpa:
