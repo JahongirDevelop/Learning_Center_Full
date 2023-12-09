@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.StudentCR;
@@ -21,10 +22,7 @@ import uz.pdp.learning_center_full.repository.GroupRepository;
 import uz.pdp.learning_center_full.repository.StudentRepository;
 import uz.pdp.learning_center_full.repository.UserRepository;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -200,7 +198,25 @@ public class StudentService {
         return studentResponses;
 
     }
+    public List<StudentResponse> getStudentByRating(UUID groupId){
+        List<StudentInfo> students = studentRepository.findAllByGroupId(groupId);
+        List<UserEntity> userEntities = new ArrayList<>();
+        for (StudentInfo student : students) {
+            userEntities.add(student.getUserEntity());
+        }
+        List<StudentResponse> responses = modelMapper.map(userEntities, new TypeToken<List<StudentResponse>>() {}.getType());
+        for (StudentResponse respons : responses) {
+            for (StudentInfo student : students) {
+                if(student.getUserEntity().getId().equals(respons.getId())){
+            respons.setRating(student.getRating());
+            respons.setGroupId(student.getGroupId());}
+            }
+        }
 
+        studentRepository.findAllByGroupId(groupId,Sort.by(Sort.Direction.ASC, "rating"));
+        return responses;
+
+    }
 
 
 
