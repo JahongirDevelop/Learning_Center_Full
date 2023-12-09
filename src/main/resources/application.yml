@@ -1,6 +1,6 @@
 spring:
   datasource:
-    password: doni2045
+    password: 1
     username: postgres
     url: jdbc:postgresql://localhost:5432/learning_center_management_full
   jpa:
@@ -36,7 +36,7 @@ springdoc:
     disable-swagger-default-url: true
     doc-expansion: none
 
-#jwt:
-#  expiry: 900000
-#  secret: gjhkoiutrefdsavzbxcnmktjyhretgwedfvbnjkrjyerhsfg
+jwt:
+  expiry: 90000000
+  secret: gjhkoiutrefdsavzbxcnmktjyhretgwedfvbnjkrjyerhsfg
 

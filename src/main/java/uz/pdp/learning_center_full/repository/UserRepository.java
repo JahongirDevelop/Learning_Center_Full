@@ -21,9 +21,9 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
-//    Optional<UserEntity> findAllByRole(Pageable pageable,UserRole role);
     Page<UserEntity> findAllByRole(UserRole userRole,Pageable pageable);
 
     List<UserEntity> findByName(String name);
 
+    Optional<UserEntity> findByEmail(String email);
 }
