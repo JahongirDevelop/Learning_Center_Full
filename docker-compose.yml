@@ -7,7 +7,7 @@ services:
       - "8081:8082"
     environment:
       DB_IP: db
-      DB_NAME: postgres
+      DB_NAME: learning_center_full
       DB_PASSWORD: 1
     depends_on:
       - db
