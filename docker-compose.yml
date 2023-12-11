@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_PASSWORD: 1
       POSTGRES_USERNAME: postgres
-      POSTGRES_DB: learning_center_management_full
+      POSTGRES_DB: learning_center_full
     volumes:
       - pg_data:/var/lib/postgresql/data
 volumes:
