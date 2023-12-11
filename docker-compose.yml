@@ -4,7 +4,7 @@ services:
   app:
     build: ./
     ports:
-      - "8081:8082"
+      - "8081:8083"
     environment:
       DB_IP: db
       DB_NAME: postgres
