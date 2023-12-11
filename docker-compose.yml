@@ -4,7 +4,7 @@ services:
   app:
     build: ./
     ports:
-      - "8080:8080"
+      - "8081:8082"
     environment:
       DB_IP: db
       DB_NAME: learning_center_full
