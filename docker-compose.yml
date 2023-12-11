@@ -2,9 +2,8 @@ version: "3.8"
 
 services:
   app:
-    build: ./
     ports:
-      - "8081:8082"
+      - "8080:8080"
     environment:
       DB_IP: db
       DB_NAME: learning_center_full
