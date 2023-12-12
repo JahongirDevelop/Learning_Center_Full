@@ -38,7 +38,7 @@ public class AttendanceController {
             @PathVariable UUID group_id){
         return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id));
     }
-
+///sdds
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
     @GetMapping("getAttendanceWithLessonByModule")
