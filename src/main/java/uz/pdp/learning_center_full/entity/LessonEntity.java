@@ -19,7 +19,7 @@ import java.util.UUID;
 public class LessonEntity extends BaseEntity {
     private UUID groupId;
     private Integer lessonNumber;
-    private int module;
+    private Integer module;
     @Enumerated(EnumType.STRING)
     private LessonStatus lessonStatus;
 }

@@ -13,7 +13,6 @@ import uz.pdp.learning_center_full.dto.response.LessonResponse;
 import uz.pdp.learning_center_full.entity.CourseEntity;
 import uz.pdp.learning_center_full.entity.GroupEntity;
 import uz.pdp.learning_center_full.entity.LessonEntity;
-import uz.pdp.learning_center_full.entity.StudentInfo;
 import uz.pdp.learning_center_full.entity.enums.GroupStatus;
 import uz.pdp.learning_center_full.entity.enums.LessonStatus;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
@@ -51,8 +50,9 @@ public class LessonService {
     public LessonResponse findById(UUID id) {
         return modelMapper.map(lessonRepository.findById(id).get(), LessonResponse.class);
     }
-    public List<LessonResponse> getLesson(UUID groupId) {
-        List<LessonEntity> lessonEntityList = lessonRepository.findLessonsByGroupId(groupId);
+    public  List<LessonResponse> getLesson(UUID groupId) {
+        List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);
+        System.out.println("lessonEntityList = " + lessonEntityList);
         return modelMapper.map(lessonEntityList, new TypeToken<List<LessonResponse>>(){}.getType());
     }
     public ResponseEntity<LessonResponse> startLesson(UUID lessonId, UUID groupId) {
@@ -71,13 +71,21 @@ public class LessonService {
         lessonRepository.save(lessonEntity);
         GroupEntity group = groupRepository.findById(lessonEntity.getGroupId()).get();
         CourseEntity course = courseRepository.findById(group.getCourseId()).get();
-
+        System.out.println(course.getModule() + ", " + group.getModule());
         if(lessonEntity.getLessonNumber() == 12 && course.getModule() == group.getModule()){
             group.setStatus(GroupStatus.FINISHED);
             groupRepository.save(group);
             return ResponseEntity.ok("Course finished!");
-        } else if (lessonEntity.getLessonNumber() == 12) {
+        }
+        else if (lessonEntity.getLessonNumber() == 12) {
             group.setModule(group.getModule()+1);
+            for (int i = 1; i <=12 ; i++) {
+            LessonCR lessonCR = new LessonCR(group.getId(),i,LessonStatus.CREATED);
+//               create(lessonCR);
+                LessonEntity map = modelMapper.map(lessonCR, LessonEntity.class);
+                map.setModule(group.getModule());
+                lessonRepository.save(map);
+            }
             groupRepository.save(group);
         }
         return attendanceService.createAttendances(attendanceCrList);

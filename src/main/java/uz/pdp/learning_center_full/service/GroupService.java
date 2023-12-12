@@ -58,6 +58,7 @@ public class GroupService {
              LessonEntity lessonEntity = new  LessonEntity();
              lessonEntity.setGroupId(groupEntity.getId());
              lessonEntity.setLessonNumber(i);
+             lessonEntity.setModule(1);
              lessonEntity.setLessonStatus(LessonStatus.CREATED);
              lessonRepository.save(lessonEntity);
          }

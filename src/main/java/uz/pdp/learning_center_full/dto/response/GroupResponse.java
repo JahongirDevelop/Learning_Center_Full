@@ -18,5 +18,5 @@ public class GroupResponse {
     private UUID mentorId;
     private GroupStatus status;
     private UUID id;
-    private int module;
+    private Integer module;
 }

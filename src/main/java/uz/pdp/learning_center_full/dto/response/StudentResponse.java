@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 public class StudentResponse {
 
-    private int rating; // baholash
+    private Integer rating; // baholash
     private String name;
     private String surname;
     private String phoneNumber;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.pdp.learning_center_full.entity.enums.Subject;
 
 import java.util.UUID;
 @AllArgsConstructor
@@ -11,8 +12,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CourseResponse {
-    private String name;
+    private Subject subject;
     private String description;
-    private int module;
+    private Integer module;
     private UUID id;
 }

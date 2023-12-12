@@ -1,9 +1,6 @@
 package uz.pdp.learning_center_full.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import uz.pdp.learning_center_full.entity.enums.Subject;
 
@@ -14,8 +11,9 @@ import uz.pdp.learning_center_full.entity.enums.Subject;
 @Getter
 @Setter
 @Builder
+@ToString
 public class MentorInfo extends BaseEntity {
-    private int experience;
+    private Integer experience;
     private Double salary;
     @Enumerated(EnumType.STRING)
     private Subject subject;

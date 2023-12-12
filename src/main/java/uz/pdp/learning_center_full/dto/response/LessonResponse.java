@@ -1,5 +1,7 @@
 package uz.pdp.learning_center_full.dto.response;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,6 @@ public class LessonResponse {
     private UUID groupId;
     private Integer lessonNumber;
     private LessonStatus lessonStatus;
-    private LocalDateTime createdDate;
     private UUID id;
-
+    private Integer module;
 }

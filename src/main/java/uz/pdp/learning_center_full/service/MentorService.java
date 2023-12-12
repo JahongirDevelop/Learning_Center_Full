@@ -21,9 +21,7 @@ import uz.pdp.learning_center_full.repository.MentorRepository;
 import uz.pdp.learning_center_full.repository.UserRepository;
 
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,56 +40,62 @@ public class MentorService {
                     .phoneNumber(mentorCr.getPhoneNumber())
                     .role(UserRole.MENTOR)
                     .build();
-            userRepository.save(userEntity);
-
-            MentorInfo mentorInfo = MentorInfo.builder()
+        UserEntity save = userRepository.save(userEntity);
+        MentorResponse mentorResponse = modelMapper.map(save,MentorResponse.class);
+        MentorInfo mentorInfo = MentorInfo.builder()
                     .salary(mentorCr.getSalary())
                     .subject(mentorCr.getSubject())
                     .experience(mentorCr.getExperience())
                     .userEntity(userEntity)
                     .build();
-            mentorRepository.save(mentorInfo);
-        return   ResponseEntity.ok(modelMapper.map(userEntity,MentorResponse.class));
+        MentorInfo save1 = mentorRepository.save(mentorInfo);
+        mentorResponse.setSalary(mentorInfo.getSalary());
+        mentorResponse.setSubject(mentorInfo.getSubject());
+        mentorResponse.setExperience(mentorInfo.getExperience());
+        mentorResponse.setId(save1.getId());
+        return  ResponseEntity.ok(mentorResponse);
     }
 
 
     public ResponseEntity<MentorResponse> getById(UUID mentorID) {
-        UserEntity userEntity = userRepository.findById(mentorID).get();
-        MentorInfo mentorEntity = mentorRepository.findMentorInfoByUserEntityId(mentorID)
+        MentorInfo mentorEntity = mentorRepository.findById(mentorID)
                 .orElseThrow(() -> new DataNotFoundException("Invalid value"));
+        UserEntity userEntity = userRepository.findById(mentorEntity.getUserEntity().getId()).get();
         MentorResponse mentorResponse = new MentorResponse(userEntity.getName(),userEntity.getSurname(),
                 userEntity.getEmail(), userEntity.getPhoneNumber(),
-                mentorEntity.getExperience(),userEntity.getId());
+                mentorEntity.getExperience(),mentorEntity.getSubject(),mentorEntity.getSalary(),mentorEntity.getId());
         return ResponseEntity.ok(mentorResponse);
     }
 
     public ResponseEntity<List<MentorResponse>> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<UserEntity> all = userRepository.findAllByRole(UserRole.MENTOR,pageable).getContent();
+        List<MentorResponse> responses = new ArrayList<>();
         for (UserEntity userEntity : all) {
-            userEntity.setId(mentorRepository.findMentorInfoByUserEntityId(userEntity.getId()).get().getId());
+            MentorResponse map = modelMapper.map(userEntity, MentorResponse.class);
+            MentorInfo mentorInfo = mentorRepository.findMentorInfoByUserEntityId(userEntity.getId()).get();
+            map.setSubject(mentorInfo.getSubject());
+            map.setSalary(mentorInfo.getSalary());
+            map.setExperience(mentorInfo.getExperience());
+            map.setId(mentorInfo.getId());
+            responses.add(map);
         }
-        return ResponseEntity.ok(modelMapper.map(all, new TypeToken<List<MentorResponse>>() {}.getType()));
+        return ResponseEntity.ok(responses);
     }
 
 
 
     public ResponseEntity<String> deleteByID(UUID mentorId) {
         try {
-            Optional<MentorInfo> mentorInfoOptional = mentorRepository.findById(mentorId);
-            if (mentorInfoOptional.isPresent()) {
-                MentorInfo mentorInfo = mentorInfoOptional.get();
-                mentorRepository.deleteById(mentorId);
-                UserEntity userEntity = mentorInfo.getUserEntity();
-                if (userEntity != null) {
-                    userRepository.deleteById(userEntity.getId());
-                }
-                return ResponseEntity.status(HttpStatus.OK).body("Deleted");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mentor Not found");
+            MentorInfo mentorInfo = mentorRepository.findById(mentorId).get();
+            if(Objects.equals(mentorInfo,null)){
+                return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
             }
-        } catch (Exception e) {
+            mentorRepository.deleteById(mentorId);
+            userRepository.deleteById(mentorInfo.getUserEntity().getId());
+                return ResponseEntity.status(HttpStatus.OK).body("Deleted");
 
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting");
         }
 
@@ -120,7 +124,9 @@ public class MentorService {
                 updatedMentorResponse.setName(updatedMentorInfo.getName());
                 updatedMentorResponse.setPhoneNumber(updatedMentorInfo.getPhoneNumber());
                         updatedMentorResponse.setId(existingMentorInfo.getId());
-                       updatedMentorResponse.setExperience(existingMentorInfo.getExperience());
+                       updatedMentorResponse.setExperience(updatedMentorInfo.getExperience());
+                       updatedMentorResponse.setSalary(updatedMentorResponse.getSalary());
+                       updatedMentorResponse.setSubject(mentorInfoOptional.get().getSubject());
                 return ResponseEntity.status(HttpStatus.OK).body(updatedMentorResponse);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

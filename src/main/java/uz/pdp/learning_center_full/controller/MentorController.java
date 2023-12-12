@@ -40,7 +40,7 @@ public class MentorController {
     public ResponseEntity<String> deleteByID(@PathVariable UUID mentor_id){
         return mentorService.deleteByID(mentor_id);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
     @PutMapping("/update")
     public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
         return mentorService.update(mentorId,mentorUp);

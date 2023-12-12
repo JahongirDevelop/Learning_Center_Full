@@ -13,6 +13,5 @@ public class UserResponse {
     private String surname;
     private String email;
     private String phoneNumber;
-
     private UUID id;
 }

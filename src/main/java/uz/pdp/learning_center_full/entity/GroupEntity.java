@@ -26,5 +26,5 @@ public class GroupEntity extends BaseEntity {
     private UUID mentorId;
     @Enumerated(EnumType.STRING)
     private GroupStatus status;
-    private int module;
+    private Integer module;
 }

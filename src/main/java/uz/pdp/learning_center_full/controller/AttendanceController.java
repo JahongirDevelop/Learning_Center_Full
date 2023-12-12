@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.response.LessonAttendanceResponse;
 import uz.pdp.learning_center_full.service.AttendanceService;
 
@@ -44,10 +41,10 @@ public class AttendanceController {
 
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
-
-    @GetMapping("getAttendanceWithLessonByModule{group_id}")
-    private ResponseEntity<List<LessonAttendanceResponse>> getAttendanceWithLessonByModule(@PathVariable UUID group_id){
-        return ResponseEntity.ok(attendanceService.getAttendanceWithLessonByModule(group_id));
+    @GetMapping("getAttendanceWithLessonByModule")
+    public ResponseEntity<List<LessonAttendanceResponse>> getAttendanceWithLessonByModule(@RequestParam UUID group_id,@RequestParam Integer module){
+        System.out.println("module = " + module);
+        return ResponseEntity.ok(attendanceService.getAttendanceWithLessonByModule(group_id,module));
     }
 
 }

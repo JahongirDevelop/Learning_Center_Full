@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 @Data
 public class StudentInfo extends BaseEntity {
-    private int rating;
+    private Integer rating;
     private UUID groupId;
 
     @OneToOne

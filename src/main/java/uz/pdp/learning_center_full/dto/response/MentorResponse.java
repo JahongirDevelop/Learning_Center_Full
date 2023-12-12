@@ -19,7 +19,9 @@ public class MentorResponse {
     private String surname;
     private String email;
     private String phoneNumber;
-    private int experience;
+    private Integer experience;
+    private Subject subject;
+    private double salary;
 //    private Double salary;
 //    private Subject subject;
     private UUID id;

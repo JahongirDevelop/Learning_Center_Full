@@ -90,18 +90,21 @@ public class AttendanceService {
         return modelMapper.map(attendanceEntityList, new TypeToken<List<AttendanceResponse>>() {}.getType());
 
     }
-    public List<LessonAttendanceResponse> getAttendanceWithLessonByModule(UUID groupId){
-        int module = 0;
-        List<LessonEntity> lessonEntityList = lessonRepository.findLessonsByGroupId(groupId);
-        for (LessonEntity lesson : lessonEntityList){
-            if(lesson.getModule() > module){
-                module = lesson.getModule();
-            }
-        }
-        List<LessonEntity> lessonEntitiesByModule = lessonRepository.findLessonsByModule(module);
+    public List<LessonAttendanceResponse> getAttendanceWithLessonByModule(UUID groupId,Integer module){
+        System.out.println("module = " + module);
+//        int modulee = 1;
+        List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);
+        System.out.println("lessonEntitiesByModule = " + lessonEntityList);
+
+//        for (LessonEntity lesson : lessonEntityList){
+//            if(lesson.getModule() > modulee){
+//                modulee = lesson.getModule();
+//            }
+//        }
+        List<LessonEntity> lessonEntitiesByModule = lessonRepository.findLessonEntitiesByModule(module);
         List<LessonAttendanceResponse> lessonAttendanceResponseList = new ArrayList<>();
 
-        System.out.println("lessonEntitiesByModule = " + lessonEntitiesByModule);
+
         for (LessonEntity lesson : lessonEntitiesByModule) {
             if(lesson.getLessonStatus() == LessonStatus.FINISHED){
                 LessonAttendanceResponse lessonAttendanceResponse = new LessonAttendanceResponse();
@@ -111,11 +114,12 @@ public class AttendanceService {
             }
 
         }
+        System.out.println("lessonAttendanceResponseList = " + lessonAttendanceResponseList);
+
         return lessonAttendanceResponseList;
     }
     public List<LessonAttendanceResponse> getAllAttendancesWithLesson(UUID groupId) {
-        List<LessonEntity> lessonEntityList = lessonRepository.findLessonsByGroupId(groupId);
-
+        List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);
         List<LessonAttendanceResponse> lessonAttendanceResponseList = new ArrayList<>();
         for (LessonEntity lesson : lessonEntityList) {
             LessonAttendanceResponse lessonAttendanceResponse = new LessonAttendanceResponse();
@@ -123,6 +127,7 @@ public class AttendanceService {
             lessonAttendanceResponse.setAttendanceResponseList(getAttendancesByLessonId(lesson.getId()));
             lessonAttendanceResponseList.add(lessonAttendanceResponse);
         }
+        System.out.println("lessonAttendanceResponseList = " + lessonAttendanceResponseList);
         return lessonAttendanceResponseList;
     }
 }

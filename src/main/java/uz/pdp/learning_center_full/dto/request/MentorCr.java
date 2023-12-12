@@ -17,7 +17,7 @@ public class MentorCr {
     @Email
     private String email;
     private String phoneNumber;
-    private int experience;
+    private Integer experience;
     private Double salary;
     private Subject subject;
 }

@@ -1,7 +1,10 @@
 package uz.pdp.learning_center_full.dto.request;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
+import uz.pdp.learning_center_full.entity.enums.Subject;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -9,9 +12,8 @@ import lombok.*;
 @Setter
 @Builder
 public class CourseCr {
-    @Column(nullable = false)
-    private String name;
+    private Subject subject;
     private String description;
     @Column(nullable = false)
-    private int module;
+    private Integer module;
 }

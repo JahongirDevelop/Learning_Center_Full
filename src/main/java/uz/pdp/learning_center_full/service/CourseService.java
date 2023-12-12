@@ -24,10 +24,10 @@ public class CourseService {
     private final ModelMapper modelMapper;
     public CourseResponse create(CourseCr courseCr){
         CourseEntity courseEntity = modelMapper.map(courseCr, CourseEntity.class);
-        List<CourseEntity> courseEntities = courseRepository.findByName(courseCr.getName());
+        List<CourseEntity> courseEntities = courseRepository.findBySubject(courseCr.getSubject());
         for (CourseEntity entity : courseEntities) {
             if(!Objects.equals(null,entity) &&
-                    Objects.equals(entity.getName(),courseEntity.getName()) &&
+                    Objects.equals(entity.getSubject(),courseEntity.getSubject()) &&
                     Objects.equals(entity.getDescription(),courseEntity.getDescription()) &&
                     Objects.equals(entity.getModule(),courseEntity.getModule())){
                 throw new DuplicateValueException("Course already exist by these values!");

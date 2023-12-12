@@ -36,10 +36,11 @@ public class StudentService {
     private final ApplicationRepository applicationRepository;
 
     public StudentResponse create(StudentCR studentCR) {
-        GroupEntity groupEntity = groupRepository.findById(studentCR.getGroupId()).get();
+
         if (!groupRepository.existsById(studentCR.getGroupId())) {
             throw new DataNotFoundException("Group not found by this id " + studentCR.getGroupId());
         } else {
+            GroupEntity groupEntity = groupRepository.findById(studentCR.getGroupId()).get();
             if (checkStudentIsExist(studentCR)) {
                 throw new DuplicateValueException("Student already exist by these values!");
             }
@@ -117,16 +118,17 @@ public class StudentService {
     }
 
     public List<StudentResponse> getAll(int page, int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        List<UserEntity> all = userRepository.findAllByRole(UserRole.STUDENT, pageable).getContent();
-//        return modelMapper.map(all, new TypeToken<List<StudentResponse>>() {}.getType());
-
-        Pageable pageable = PageRequest.of(page, size);
-        List<UserEntity> all = userRepository.findAllByRole(UserRole.STUDENT,pageable).getContent();
+    Pageable pageable = PageRequest.of(page, size);
+    List<UserEntity> all = userRepository.findAllByRole(UserRole.STUDENT,pageable).getContent();
+    List<StudentResponse> responses = new ArrayList<>();
         for (UserEntity userEntity : all) {
-            userEntity.setId(studentRepository.findStudentInfoByUserEntityId(userEntity.getId()).get().getId());
+            StudentResponse studentResponse = modelMapper.map(userEntity, StudentResponse.class);
+            StudentInfo studentInfo = studentRepository.findStudentInfoByUserEntityId(userEntity.getId()).get();
+            studentResponse.setId(studentInfo.getId());
+            studentResponse.setGroupId(studentInfo.getGroupId());
+            responses.add(studentResponse);
         }
-        return modelMapper.map(all, new TypeToken<List<MentorResponse>>() {}.getType());
+        return responses;
     }
 
     public StudentResponse updateById(UUID studentId, StudentUpdateDTO update) {
@@ -145,8 +147,8 @@ public class StudentService {
         userEntity.setRole(UserRole.STUDENT);
 
         student.setUserEntity(userEntity);
-        student.setRating(update.getRating());
-        student.setGroupId(update.getGroupId());
+        student.setRating(student.getRating());
+        student.setGroupId(student.getGroupId());
         studentRepository.save(student);
         return new StudentResponse(student.getRating(), userEntity.getName(),
                 userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),

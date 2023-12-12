@@ -24,6 +24,7 @@ public class LessonController {
 //        return  ResponseEntity.status(200).body(lessonService.create(lessonCR));
 //    }
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @GetMapping("/get_All")
     public ResponseEntity<List<LessonResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
@@ -36,7 +37,7 @@ public class LessonController {
     }
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
     @GetMapping("/get-lessons/{groupId}")
-    public ResponseEntity<List<LessonResponse>> getAll(@PathVariable @NotNull UUID groupId) {
+    public ResponseEntity<List<LessonResponse>> getAll(@PathVariable UUID groupId) {
         return ResponseEntity.status(200).body(lessonService.getLesson(groupId));
     }
     @PreAuthorize("hasRole('MENTOR')")

@@ -20,5 +20,5 @@ public class AttendanceEntity extends BaseEntity {
     private UUID groupId;
     private boolean isExist;
     private String description; // sabab
-    private int points;
+    private Integer points;
 }
