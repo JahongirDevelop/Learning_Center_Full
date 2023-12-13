@@ -1,5 +1,6 @@
 package uz.pdp.learning_center_full.controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,12 @@ public class CourseController {
         return ResponseEntity.ok(courseService.create(courseCr));
 
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PermitAll
     @GetMapping("/get_by_id/{course_id}")
     public ResponseEntity<CourseResponse> findById(@PathVariable UUID course_id) {
         return courseService.findById(course_id);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PermitAll
     @GetMapping("/get_all")
     public ResponseEntity<List<CourseResponse>> getAllCourses(
             @RequestParam(defaultValue = "0") int page,
