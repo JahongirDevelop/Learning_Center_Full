@@ -24,7 +24,7 @@ public class StudentController {
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentCR studentCR) {
         return ResponseEntity.status(200).body(studentService.create(studentCR));
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')  or hasRole('STUDENT')")
     @PutMapping("/update")
     public ResponseEntity<StudentResponse> update(
             @RequestParam UUID studentId,
@@ -32,6 +32,7 @@ public class StudentController {
         return ResponseEntity.status(200).body(studentService.updateById(studentId, update));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("delete/{studentId}")
     public ResponseEntity<String> deleteStudentById(@PathVariable UUID studentId) {
         return ResponseEntity.status(200).body(studentService.deleteById(studentId));
@@ -45,7 +46,7 @@ public class StudentController {
         return ResponseEntity.status(200).body(studentService.getAll(page, size));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')  or hasRole('MENTOR')")
     @GetMapping("/get-group-students/{group_id}")
     public ResponseEntity<List<StudentResponse>> getGroupStudents(@PathVariable UUID group_id){
         return ResponseEntity.status(200).body(studentService.getByGroupId(group_id));

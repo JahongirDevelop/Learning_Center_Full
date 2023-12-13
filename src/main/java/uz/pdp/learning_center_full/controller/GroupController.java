@@ -35,7 +35,7 @@ public class GroupController {
         return groupService.findById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') ")
     @GetMapping("/get-all")
     public List<GroupEntity> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -43,7 +43,7 @@ public class GroupController {
         return groupService.getAll(page, size);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
     @GetMapping("/mentor-groups/{mentor_id}")
     public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
         return groupService.getByMentorId(mentor_id);
