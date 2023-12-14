@@ -1,5 +1,5 @@
 server:
-  port: 8086
+  port: 8080
 spring:
   datasource:
     password: ${DB_PASSWORD:1}
