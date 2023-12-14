@@ -109,7 +109,7 @@ public class StudentService {
                         studentCR.getGroupId(), studentEntity.getId());
 
                 Optional<GroupEntity> updateGroup = groupRepository.findById(studentEntity.getGroupId());
-                updateGroup.get().setStudentCount(updateGroup.get().getStudentCount() + 1);
+                updateGroup.get().setStudentCount(updateGroup.get().getStudentCount());
                 groupRepository.save(modelMapper.map(updateGroup, GroupEntity.class));
                 studentRepository.save(studentEntity);
                 return ResponseEntity.ok(studentResponse);

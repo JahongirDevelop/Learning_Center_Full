@@ -71,7 +71,7 @@ public class LessonService {
         lessonRepository.save(lessonEntity);
         GroupEntity group = groupRepository.findById(lessonEntity.getGroupId()).get();
         CourseEntity course = courseRepository.findById(group.getCourseId()).get();
-        System.out.println(course.getModule() + ", " + group.getModule());
+
         if(lessonEntity.getLessonNumber() == 12 && course.getModule() == group.getModule()){
             group.setStatus(GroupStatus.FINISHED);
             groupRepository.save(group);
