@@ -2,10 +2,10 @@ server:
   port: 8080
 spring:
   datasource:
-    password: ${DB_PASSWORD:1}
-    username: ${DB_USERNAME:postgres}
-    url: jdbc:postgresql://${DB_IP:localhost}:${DB_PORT:5432}/${DB_NAME:learning_center_full}
     driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:1}
+    url: jdbc:postgresql://${DB_IP:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}
   jpa:
     hibernate:
       ddl-auto: update

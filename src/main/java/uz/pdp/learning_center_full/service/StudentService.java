@@ -72,7 +72,7 @@ public class StudentService {
                         .build();
                 studentRepository.save(studentInfo);
                 StudentResponse studentResponse = new StudentResponse(0, userEntity.getName(),userEntity.getSurname(),
-                        userEntity.getPhoneNumber(), userEntity.getEmail(), studentCR.getGroupId(),userEntity.getId());
+                        userEntity.getPhoneNumber(), userEntity.getEmail(), studentCR.getGroupId(),studentInfo.getId());
                 return studentResponse;
             }
         }
@@ -112,7 +112,7 @@ public class StudentService {
 
                 StudentResponse studentResponse = new StudentResponse(0, userEntity.getName(),
                         userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
-                        studentCR.getGroupId(), userEntity.getId());
+                        studentCR.getGroupId(), studentEntity.getId());
 
                 Optional<GroupEntity> updateGroup = groupRepository.findById(studentEntity.getGroupId());
                 updateGroup.get().setStudentCount(updateGroup.get().getStudentCount());
