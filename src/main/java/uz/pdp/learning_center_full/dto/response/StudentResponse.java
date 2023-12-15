@@ -10,7 +10,6 @@ import java.util.UUID;
 @Setter
 @Builder
 public class StudentResponse {
-
     private Integer rating; // baholash
     private String name;
     private String surname;

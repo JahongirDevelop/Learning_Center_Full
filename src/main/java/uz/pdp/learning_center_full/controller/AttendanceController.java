@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.response.LessonAttendanceResponse;
+import uz.pdp.learning_center_full.dto.response.UserResponse;
 import uz.pdp.learning_center_full.service.AttendanceService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,12 +25,17 @@ public class AttendanceController {
 //    }
 
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
-
-    @GetMapping("/get_student_attendances/{student_id}")
-    public ResponseEntity<List<LessonAttendanceResponse>> getStudentAttendances(
-            @PathVariable UUID student_id) {
-        return ResponseEntity.ok(attendanceService.getStudentAttendances(student_id));
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+//
+//    @GetMapping("/get_student_attendances/{student_id}")
+//    public ResponseEntity<List<LessonAttendanceResponse>> getStudentAttendances(
+//            @PathVariable UUID student_id) {
+//        return ResponseEntity.ok(attendanceService.getStudentAttendances(student_id));
+//    }
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/my-attendance")
+    public  ResponseEntity<List<LessonAttendanceResponse>> studentAttendances(Principal principal){
+        return ResponseEntity.ok(attendanceService.getStudentAttendances(UUID.fromString(principal.getName())));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.MentorCr;
 import uz.pdp.learning_center_full.dto.request.MentorUpdate;
 import uz.pdp.learning_center_full.dto.response.MentorResponse;
+import uz.pdp.learning_center_full.dto.response.StudentProfile;
 import uz.pdp.learning_center_full.service.MentorService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +46,17 @@ public class MentorController {
     @PutMapping("/update")
     public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
         return mentorService.update(mentorId,mentorUp);
+    }
+    @PreAuthorize("hasRole('MENTOR')")
+    @GetMapping("/me")
+    public  ResponseEntity<MentorResponse> myProfile(Principal principal){
+        return mentorService.me(principal);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-mentors-by-course/{course_id}")
+    public ResponseEntity<List<MentorResponse>> getByCourseId( @PathVariable UUID course_id){
+       return mentorService.getByCourseId(course_id);
+
     }
 
 

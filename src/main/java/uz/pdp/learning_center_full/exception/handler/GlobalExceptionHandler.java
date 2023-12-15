@@ -29,6 +29,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(404).body(errorDTO);
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<AppErrorDTO> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
+        AppErrorDTO errorDTO = new AppErrorDTO(
+                request.getRequestURI(),
+                "Bad Request: " + e.getMessage(),
+                400
+        );
+        return ResponseEntity.status(400).body(errorDTO);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<AppErrorDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {

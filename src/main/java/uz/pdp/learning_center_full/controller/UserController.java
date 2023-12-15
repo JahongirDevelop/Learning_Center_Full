@@ -6,15 +6,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.AuthDto;
 import uz.pdp.learning_center_full.dto.request.UserCr;
 import uz.pdp.learning_center_full.dto.response.JwtResponse;
+import uz.pdp.learning_center_full.dto.response.StudentProfile;
 import uz.pdp.learning_center_full.dto.response.UserResponse;
 import uz.pdp.learning_center_full.service.UserService;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,8 +31,12 @@ public class UserController {
 
     @PermitAll
     @PostMapping("/sign-in")
-    public JwtResponse test(@Valid @RequestBody AuthDto dto) {
+    public JwtResponse signIn(@Valid @RequestBody AuthDto dto) {
         return userService.signIn(dto);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin-me")
+    public  ResponseEntity<UserResponse> myProfile(Principal principal){
+        return userService.me(principal);
+    }
 }
