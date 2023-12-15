@@ -7,7 +7,7 @@ services:
       - "8080:8080"
     environment:
       DB_IP: db
-      DB_NAME: learning_center_full
+      DB_NAME: postgres
       DB_PASSWORD: 1
     depends_on:
       - db
@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_PASSWORD: 1
       POSTGRES_USERNAME: postgres
-      POSTGRES_DB: learning_center_full
+      POSTGRES_DB: postgres
     volumes:
       - pg_data:/var/lib/postgresql/data
 volumes:
