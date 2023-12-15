@@ -22,6 +22,8 @@ import uz.pdp.learning_center_full.repository.CourseRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static uz.pdp.learning_center_full.entity.enums.ApplicationStatus.UNCHECKED;
 
@@ -32,18 +34,47 @@ public class ApplicationService {
     private final CourseRepository courseRepository;
     private final ApplicationRepository applicationRepository;
 
+//    public ApplicationResponse create(ApplicationCr applicationCR) {
+//        Optional<CourseEntity> course = courseRepository.findById(applicationCR.getCourseId());
+//        if (course.isEmpty()) {
+//            throw new DataNotFoundException("course not found by this id " + applicationCR.getCourseId());
+//        } else if (applicationRepository.existsByEmail(applicationCR.getEmail()) &&
+//                applicationRepository.existsByCourseId(applicationCR.getCourseId())) {
+//            throw new DuplicateValueException("You have already sent application this course!");
+//        }
+//        ApplicationEntity applicationEntity = modelMapper.map(applicationCR, ApplicationEntity.class);
+//        applicationEntity.setStatus(UNCHECKED);
+//        return modelMapper.map(applicationRepository.save(applicationEntity), ApplicationResponse.class);
+//    }
+
     public ApplicationResponse create(ApplicationCr applicationCR) {
+        validateApplication(applicationCR);
         Optional<CourseEntity> course = courseRepository.findById(applicationCR.getCourseId());
         if (course.isEmpty()) {
-            throw new DataNotFoundException("course not found by this id " + applicationCR.getCourseId());
+            throw new DataNotFoundException("Course not found by this id " + applicationCR.getCourseId());
         } else if (applicationRepository.existsByEmail(applicationCR.getEmail()) &&
                 applicationRepository.existsByCourseId(applicationCR.getCourseId())) {
-            throw new DuplicateValueException("You have already sent application this course!");
+            throw new DuplicateValueException("You have already sent an application for this course!");
         }
         ApplicationEntity applicationEntity = modelMapper.map(applicationCR, ApplicationEntity.class);
         applicationEntity.setStatus(UNCHECKED);
         return modelMapper.map(applicationRepository.save(applicationEntity), ApplicationResponse.class);
     }
+
+    private void validateApplication(ApplicationCr applicationCR) {
+        validateEmail(applicationCR.getEmail());
+        // Add other validations if needed
+    }
+
+    private void validateEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid email address: " + email);
+        }
+    }
+
 
     public List<ApplicationResponse> getAll(int page, int size) {
 

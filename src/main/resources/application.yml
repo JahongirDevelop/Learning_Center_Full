@@ -1,6 +1,8 @@
 server:
-  port: 8086
+  port: 8080
 spring:
+  main:
+      allow-circular-references=true:
   datasource:
     password: ${DB_PASSWORD:1}
     username: ${DB_USERNAME:postgres}

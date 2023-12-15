@@ -38,20 +38,18 @@ public class AttendanceService {
     }
 //dofnvjd
     public List<LessonAttendanceResponse> getStudentAttendances(UUID id) {
-        List<AttendanceEntity> attendanceEntityList = attendanceRepository.findAllByStudentId(id);
+
+        List<AttendanceEntity> attendanceEntityList = attendanceRepository.findAllByStudentId( studentRepository.findStudentInfoByUserEntityId(id).get().getId());
         return modelMapper.map(attendanceEntityList, new TypeToken<List<AttendanceResponse>>() {}.getType());
 
     }
     public ResponseEntity<String> createAttendances(List<AttendanceCr> attendanceDtoList) {
         List<StudentInfo> all = studentRepository.findAll();
-
         for (AttendanceCr attendanceDto : attendanceDtoList) {
             checkLesson(attendanceDto.getLessonId());
             checkStudent(attendanceDto.getStudentId());
             checkAttendance(attendanceDto);
-
         }
-
         for (AttendanceCr attendanceDto : attendanceDtoList) {
             StudentInfo byId = studentRepository.findById(attendanceDto.getStudentId()).get();
             byId.setRating(byId.getRating()+attendanceDto.getPoints());

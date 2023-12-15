@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.StudentCR;
-import uz.pdp.learning_center_full.dto.response.MentorResponse;
+import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
-import uz.pdp.learning_center_full.dto.response.StudentUpdateDTO;
 import uz.pdp.learning_center_full.entity.*;
+import uz.pdp.learning_center_full.entity.enums.Subject;
 import uz.pdp.learning_center_full.entity.enums.UserRole;
 import uz.pdp.learning_center_full.exception.BadRequestException;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
@@ -22,6 +22,7 @@ import uz.pdp.learning_center_full.repository.GroupRepository;
 import uz.pdp.learning_center_full.repository.StudentRepository;
 import uz.pdp.learning_center_full.repository.UserRepository;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,13 @@ public class StudentService {
     private final GroupRepository groupRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final ApplicationRepository applicationRepository;
+    private final CourseService courseService;
     private final MailSenderService senderService;
     private final ModelMapper modelMapper;
-    private final ApplicationRepository applicationRepository;
+//    private final StudentService studentService;
+    private final  GroupService groupService;
+    private final MentorService mentorService;
 
     public StudentResponse create(StudentCR studentCR) {
 
@@ -103,13 +108,14 @@ public class StudentService {
                 groupEntity.setStudentCount(groupEntity.getStudentCount() + 1);
                 StudentInfo studentEntity = modelMapper.map(studentCR, StudentInfo.class);
                 studentEntity.setUserEntity(save);
+                studentEntity.setRating(0);
 
                 StudentResponse studentResponse = new StudentResponse(0, userEntity.getName(),
                         userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
                         studentCR.getGroupId(), studentEntity.getId());
 
                 Optional<GroupEntity> updateGroup = groupRepository.findById(studentEntity.getGroupId());
-                updateGroup.get().setStudentCount(updateGroup.get().getStudentCount() + 1);
+                updateGroup.get().setStudentCount(updateGroup.get().getStudentCount());
                 groupRepository.save(modelMapper.map(updateGroup, GroupEntity.class));
                 studentRepository.save(studentEntity);
                 return ResponseEntity.ok(studentResponse);
@@ -218,6 +224,33 @@ public class StudentService {
         studentRepository.findAllByGroupId(groupId,Sort.by(Sort.Direction.ASC, "rating"));
         return responses;
 
+    }
+
+    public ResponseEntity<StudentResponse> getById(UUID studentId) {
+        StudentInfo studentEntity = studentRepository.findStudentInfoByUserEntityId(studentId)
+                .orElseThrow(() -> new DataNotFoundException("Invalid value"));
+        UserEntity userEntity = userRepository.findById(studentEntity.getUserEntity().getId()).get();
+        StudentResponse studentresponse = new StudentResponse(studentEntity.getRating(),userEntity.getName(),
+                userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
+                studentEntity.getGroupId(),studentEntity.getId());
+        return ResponseEntity.ok(studentresponse);
+    }
+    public ResponseEntity<StudentProfile> me(Principal principal){
+        StudentProfile studentProfile = new StudentProfile();
+        StudentResponse byId = getById(UUID.fromString(principal.getName())).getBody();
+        GroupResponse group = groupService.findById(byId.getGroupId());
+        CourseResponse course = courseService.findById(group.getCourseId()).getBody();
+        MentorResponse mentor = mentorService.getById(group.getMentorId()).getBody();
+        studentProfile.setName(byId.getName());
+        studentProfile.setSurname(byId.getSurname());
+        Subject subject = course.getSubject();
+        studentProfile.setCourseName(subject.name());
+        studentProfile.setGroupName(group.getGroupName());
+        studentProfile.setGroupName(group.getGroupName());
+        studentProfile.setMentorName(mentor.getName());
+        studentProfile.setMentorSurname(mentor.getSurname());
+        studentProfile.setRating(byId.getRating());
+        return  ResponseEntity.ok(studentProfile);
     }
 
 
