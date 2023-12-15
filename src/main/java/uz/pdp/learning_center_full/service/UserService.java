@@ -47,6 +47,7 @@ public class UserService {
     }
 
     public ResponseEntity<UserResponse> me(Principal principal) {
+        //.
         UserEntity userEntity = userRepository.findById(UUID.fromString(principal.getName())).get();
         return ResponseEntity.ok(modelMapper.map(userEntity, UserResponse.class));
 
