@@ -52,6 +52,7 @@ public class MentorController {
     public  ResponseEntity<MentorResponse> myProfile(Principal principal){
         return mentorService.me(principal);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-mentors-by-course/{course_id}")
     public ResponseEntity<List<MentorResponse>> getByCourseId( @PathVariable UUID course_id){
