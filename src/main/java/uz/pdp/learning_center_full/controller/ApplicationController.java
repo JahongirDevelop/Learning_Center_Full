@@ -41,4 +41,5 @@ public class ApplicationController {
             @RequestParam ApplicationStatus status){
         return applicationService.getAllByStatus(page, size,status);
     }
+}
 
