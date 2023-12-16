@@ -23,30 +23,30 @@ public class LessonController {
 //    public ResponseEntity<LessonResponse> create(@RequestBody LessonCR lessonCR){
 //        return  ResponseEntity.status(200).body(lessonService.create(lessonCR));
 //    }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get_All")
     public ResponseEntity<List<LessonResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.status(200).body(lessonService.getAll(page, size));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<LessonResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.status(200).body(lessonService.findById(id));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get-lessons/{groupId}")
     public ResponseEntity<List<LessonResponse>> getAll(@PathVariable UUID groupId) {
         return ResponseEntity.status(200).body(lessonService.getLesson(groupId));
     }
-    @PreAuthorize("hasRole('MENTOR')")
+    @PreAuthorize("hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @PostMapping("/start_lesson{lessonId}/{groupId}")
     public ResponseEntity<LessonResponse>  startLesson(
             @PathVariable UUID lessonId, @PathVariable UUID groupId){
         return lessonService.startLesson(lessonId, groupId);
     }
-    @PreAuthorize("hasRole('MENTOR')")
+    @PreAuthorize("hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @PostMapping("/finish_lesson")
     public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
          return lessonService.finishLesson(attendanceCrList);

@@ -88,6 +88,7 @@ public class LessonService {
             }
             groupRepository.save(group);
         }
+        System.out.println("attendanceCrList = " + attendanceCrList);
         return attendanceService.createAttendances(attendanceCrList);
     }
 

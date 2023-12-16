@@ -23,19 +23,19 @@ import java.util.UUID;
 public class GroupController {
 
     private final GroupService groupService;
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<GroupResponse> create(@Valid @RequestBody GroupCr groupCr) {
         return ResponseEntity.status(200).body(groupService.create(groupCr));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/{id}")
     public GroupResponse getGroup(@PathVariable UUID id){
         return groupService.findById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN') ")
+    @PreAuthorize("hasRole('ADMIN')  or hasRole('SUPER_ADMIN')")
     @GetMapping("/get-all")
     public List<GroupEntity> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -43,25 +43,25 @@ public class GroupController {
         return groupService.getAll(page, size);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @GetMapping("/mentor-groups/{mentor_id}")
     public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
         return groupService.getByMentorId(mentor_id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("get-by-course-id/{course_id}")
     public List<GroupResponse> getByCourseId(@PathVariable UUID course_id){
         return groupService.getByCourseId(course_id);
      }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("get-available-groups-by-course-id/{course_id}")
     public List<GroupResponse> getAvailableGroupsByCourseId(@PathVariable UUID course_id){
         return groupService.getAvailableGroupsByCourseId(course_id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @PutMapping("/update{groupId}")
     public ResponseEntity<GroupResponse> update(@PathVariable @NotNull UUID groupId,
                                                 @Valid @RequestBody UpdateGroupDto updateGroupDto){

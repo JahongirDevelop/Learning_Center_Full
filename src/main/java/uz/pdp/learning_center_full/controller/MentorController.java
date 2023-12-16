@@ -30,30 +30,29 @@ public class MentorController {
     public ResponseEntity<MentorResponse> getByID(@PathVariable UUID mentor_id){
         return mentorService.getById(mentor_id);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get_all")
     public ResponseEntity<List<MentorResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
         return mentorService.getAll(page,size);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @DeleteMapping("/delete_by_id/{mentor_id}")
     public ResponseEntity<String> deleteByID(@PathVariable UUID mentor_id){
         return mentorService.deleteByID(mentor_id);
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
         return mentorService.update(mentorId,mentorUp);
     }
-    @PreAuthorize("hasRole('MENTOR')")
+    @PreAuthorize("hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
     @GetMapping("/me")
     public  ResponseEntity<MentorResponse> myProfile(Principal principal){
         return mentorService.me(principal);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get-mentors-by-course/{course_id}")
     public ResponseEntity<List<MentorResponse>> getByCourseId( @PathVariable UUID course_id){
        return mentorService.getByCourseId(course_id);
