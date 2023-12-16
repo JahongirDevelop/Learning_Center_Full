@@ -12,6 +12,7 @@ import uz.pdp.learning_center_full.dto.request.StudentCR;
 import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
 import uz.pdp.learning_center_full.entity.*;
+import uz.pdp.learning_center_full.entity.enums.ApplicationStatus;
 import uz.pdp.learning_center_full.entity.enums.Subject;
 import uz.pdp.learning_center_full.entity.enums.UserRole;
 import uz.pdp.learning_center_full.exception.BadRequestException;
@@ -79,6 +80,10 @@ public class StudentService {
     }
 
     public ResponseEntity<StudentResponse> createByApplication(UUID applicationID, UUID groupID) {
+        ApplicationEntity application1 = applicationRepository.findById(applicationID)
+                .orElseThrow(() -> new DataNotFoundException("Application not found with this id " + applicationID));
+        application1.setStatus(ApplicationStatus.CHECKED);
+        applicationRepository.save(application1);
         GroupEntity groupEntity = groupRepository.findById(groupID).get();
         if(!applicationRepository.existsById(applicationID)) {
             throw new DataNotFoundException("Application not found by this id " + applicationID);

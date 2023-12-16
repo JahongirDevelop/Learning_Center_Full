@@ -88,13 +88,13 @@ public class ApplicationService {
         return ResponseEntity.ok(modelMapper.map(applicationEntity,ApplicationResponse.class));
     }
 
-    public ResponseEntity<ApplicationResponse> confirm(UUID applicationId) {
-        ApplicationEntity application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new DataNotFoundException("Application not found with this id " + applicationId));
-        application.setStatus(ApplicationStatus.CHECKED);
-        applicationRepository.save(application);
-        return ResponseEntity.ok(modelMapper.map(application,ApplicationResponse.class));
-    }
+//    public ResponseEntity<ApplicationResponse> confirm(UUID applicationId) {
+//        ApplicationEntity application = applicationRepository.findById(applicationId)
+//                .orElseThrow(() -> new DataNotFoundException("Application not found with this id " + applicationId));
+//        application.setStatus(ApplicationStatus.CHECKED);
+//        applicationRepository.save(application);
+//        return ResponseEntity.ok(modelMapper.map(application,ApplicationResponse.class));
+//    }
 
     public List<ApplicationResponse> getAllByStatus(int page, int size,ApplicationStatus status) {
         Pageable pageable = PageRequest.of(page, size);

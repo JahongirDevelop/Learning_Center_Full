@@ -19,7 +19,7 @@ public class ApplicationResponse {
     private String surname;
     private String phoneNumber;
     private String email;
-    private ApplicationStatus applicationStatus;
+    private ApplicationStatus status;
     private UUID courseId;
     private UUID id;
 
