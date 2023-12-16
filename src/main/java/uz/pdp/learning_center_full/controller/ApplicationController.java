@@ -43,9 +43,9 @@ public class ApplicationController {
         return applicationService.getAllByStatus(page, size,status);
     }
     // add status, and related methods
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/confirm{application_id}")
-    public ResponseEntity<ApplicationResponse> confirmApplication(@PathVariable UUID application_id){
-        return applicationService.confirm(application_id);
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/confirm{application_id}")
+//    public ResponseEntity<ApplicationResponse> confirmApplication(@PathVariable UUID application_id){
+//        return applicationService.confirm(application_id);
+//    }
 }
