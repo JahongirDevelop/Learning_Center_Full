@@ -7,11 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.learning_center_full.dto.request.ApplicationCr;
 import uz.pdp.learning_center_full.dto.request.AuthDto;
 import uz.pdp.learning_center_full.dto.request.UserCr;
+import uz.pdp.learning_center_full.dto.response.ApplicationResponse;
 import uz.pdp.learning_center_full.dto.response.JwtResponse;
 import uz.pdp.learning_center_full.dto.response.StudentProfile;
 import uz.pdp.learning_center_full.dto.response.UserResponse;
+import uz.pdp.learning_center_full.service.ApplicationService;
 import uz.pdp.learning_center_full.service.UserService;
 
 import java.security.Principal;
@@ -21,7 +24,7 @@ import java.security.Principal;
 @RequestMapping("api/v1/users")
 @SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
-
+    private final ApplicationService applicationService;
     private final UserService userService ;
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/create-admin")
@@ -34,10 +37,15 @@ public class UserController {
     public JwtResponse signIn(@Valid @RequestBody AuthDto dto) {
         return userService.signIn(dto);
     }
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+
     @PermitAll
     @GetMapping("/me")
     public  ResponseEntity<Object> myProfile(Principal principal){
         return ResponseEntity.ok(userService.me(principal));
+    }
+
+    @PostMapping("/create-application")
+    public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
+        return ResponseEntity.ok(applicationService.create(applicationCR));
     }
 }
