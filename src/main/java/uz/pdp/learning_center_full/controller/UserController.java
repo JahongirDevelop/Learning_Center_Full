@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.ApplicationCr;
 import uz.pdp.learning_center_full.dto.request.AuthDto;
 import uz.pdp.learning_center_full.dto.request.UserCr;
-import uz.pdp.learning_center_full.dto.response.ApplicationResponse;
-import uz.pdp.learning_center_full.dto.response.JwtResponse;
-import uz.pdp.learning_center_full.dto.response.StudentProfile;
-import uz.pdp.learning_center_full.dto.response.UserResponse;
+import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.service.ApplicationService;
+import uz.pdp.learning_center_full.service.CourseService;
 import uz.pdp.learning_center_full.service.UserService;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +25,8 @@ import java.security.Principal;
 @SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
     private final ApplicationService applicationService;
-    private final UserService userService ;
+    private final UserService userService;
+    private final CourseService courseService;
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/create-admin")
     public ResponseEntity<UserResponse> createAdmin(@Valid @RequestBody UserCr studentCR) {
@@ -47,5 +48,18 @@ public class UserController {
     @PostMapping("/create-application")
     public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));
+    }
+
+    @PermitAll
+    @GetMapping("/get_by_id/{course_id}")
+    public ResponseEntity<CourseResponse> findById(@PathVariable UUID course_id) {
+        return courseService.findById(course_id);
+    }
+    @PermitAll
+    @GetMapping("/get_all_course")
+    public ResponseEntity<List<CourseResponse>> getAllCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return courseService.getAll(page,size);
     }
 }
