@@ -21,7 +21,7 @@ import java.util.UUID;
 public class CourseController {
     private final CourseService courseService;
 
-
+//dsa
     @PermitAll
     @GetMapping("/get_by_id/{course_id}")
     public ResponseEntity<CourseResponse> findById(@PathVariable UUID course_id) {
