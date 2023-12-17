@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.ApplicationCr;
 import uz.pdp.learning_center_full.dto.request.AuthDto;
 import uz.pdp.learning_center_full.dto.request.UserCr;
+import uz.pdp.learning_center_full.dto.request.UserUpdate;
 import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.service.ApplicationService;
 import uz.pdp.learning_center_full.service.CourseService;
@@ -27,16 +28,16 @@ public class UserController {
     private final ApplicationService applicationService;
     private final UserService userService;
     private final CourseService courseService;
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PostMapping("/create-admin")
-    public ResponseEntity<UserResponse> createAdmin(@Valid @RequestBody UserCr studentCR) {
-        return ResponseEntity.status(200).body(userService.addAdmin(studentCR));
-    }
-
     @PermitAll
     @PostMapping("/sign-in")
     public JwtResponse signIn(@Valid @RequestBody AuthDto dto) {
         return userService.signIn(dto);
+    }
+
+    @PermitAll
+    @PutMapping("/update")
+    public ResponseEntity<Object> update(@RequestBody UserUpdate userUpdate,Principal principal){
+        return ResponseEntity.ok(userService.update(userUpdate, principal));
     }
 
     @PermitAll

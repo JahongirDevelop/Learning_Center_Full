@@ -15,7 +15,6 @@ import java.util.UUID;
 public class StudentInfo extends BaseEntity {
     private Integer rating;
     private UUID groupId;
-
     @OneToOne
     private UserEntity userEntity;
 

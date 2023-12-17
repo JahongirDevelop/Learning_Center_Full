@@ -24,8 +24,15 @@ public class AdminController {
     private final GroupService groupService;
     private final MentorService mentorService;
     private final StudentService studentService;
+    private final UserService userService;
 
     //application
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PostMapping("/create-admin")
+    public ResponseEntity<UserResponse> createAdmin(@Valid @RequestBody UserCr studentCR) {
+        return ResponseEntity.status(200).body(userService.addAdmin(studentCR));
+    }
+
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get_application/{id}")
