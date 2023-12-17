@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.StudentCR;
 import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.entity.enums.Subject;
-import uz.pdp.learning_center_full.service.CourseService;
-import uz.pdp.learning_center_full.service.GroupService;
-import uz.pdp.learning_center_full.service.MentorService;
-import uz.pdp.learning_center_full.service.StudentService;
+import uz.pdp.learning_center_full.service.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -23,6 +20,7 @@ import java.util.UUID;
 @RequestMapping("api/v1/students")
 public class StudentController {
     private final StudentService studentService;
+    private final AttendanceService attendanceService;
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentCR studentCR) {
@@ -67,11 +65,12 @@ public class StudentController {
     public ResponseEntity<List<StudentResponse>> getStudentByRating(UUID groupId){
         return ResponseEntity.status(200).body(studentService.getStudentByRating(groupId));
     }
-    @PreAuthorize("hasRole('STUDENT') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/me")
-    public  ResponseEntity<StudentProfile> myProfile(Principal principal){
-        return studentService.me(principal);
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/my-attendance")
+    public  ResponseEntity<List<LessonAttendanceResponse>> studentAttendances(Principal principal){
+        return ResponseEntity.ok(attendanceService.getStudentAttendances(UUID.fromString(principal.getName())));
     }
+
 
 
 }
