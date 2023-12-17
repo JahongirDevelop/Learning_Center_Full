@@ -54,14 +54,14 @@ public class MentorController {
         return ResponseEntity.ok(attendanceService.getAttendanceWithLessonByModule(group_id,module));
     }
     @PreAuthorize(" hasRole('MENTOR') ")
-    @GetMapping("/get_All")
+    @GetMapping("/get-all-lesson")
     public ResponseEntity<List<LessonResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.status(200).body(lessonService.getAll(page, size));
     }
     @PreAuthorize(" hasRole('MENTOR') ")
-    @GetMapping("/{id}")
+    @GetMapping("get-lesson-by-id/{id}")
     public ResponseEntity<LessonResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.status(200).body(lessonService.findById(id));
     }
@@ -82,8 +82,5 @@ public class MentorController {
     public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
         return lessonService.finishLesson(attendanceCrList);
     }
-
-
-
 
 }
