@@ -24,7 +24,6 @@ public class MentorController {
     public ResponseEntity<MentorResponse> addMentor(@RequestBody MentorCr mentorCr) {
         return mentorService.addMentor(mentorCr);
     }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_by_id/{mentor_id}")
     public ResponseEntity<MentorResponse> getByID(@PathVariable UUID mentor_id){
@@ -46,11 +45,6 @@ public class MentorController {
     @PutMapping("/update")
     public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
         return mentorService.update(mentorId,mentorUp);
-    }
-    @PreAuthorize("hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/me")
-    public  ResponseEntity<MentorResponse> myProfile(Principal principal){
-        return mentorService.me(principal);
     }
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get-mentors-by-course/{course_id}")
