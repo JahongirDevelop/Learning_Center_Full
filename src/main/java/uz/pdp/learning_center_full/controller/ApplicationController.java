@@ -18,8 +18,20 @@ import java.util.UUID;
 public class ApplicationController {
     private final ApplicationService applicationService;
     @PostMapping("/create")
-    public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR) {
+    public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));
+    }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @GetMapping("/get_application{id}")
+    public ResponseEntity<ApplicationResponse> getApplication(@PathVariable UUID id){
+        return applicationService.findById(id);
+    }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @GetMapping("/getAll")
+    public List<ApplicationResponse> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        return applicationService.getAll(page, size);
     }
 }
 
