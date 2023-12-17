@@ -3,12 +3,17 @@ package uz.pdp.learning_center_full.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.AttendanceCr;
+import uz.pdp.learning_center_full.dto.response.ApplicationResponse;
 import uz.pdp.learning_center_full.dto.response.AttendanceResponse;
 import uz.pdp.learning_center_full.dto.response.LessonAttendanceResponse;
 import uz.pdp.learning_center_full.dto.response.LessonResponse;
+import uz.pdp.learning_center_full.entity.ApplicationEntity;
 import uz.pdp.learning_center_full.entity.AttendanceEntity;
 import uz.pdp.learning_center_full.entity.LessonEntity;
 import uz.pdp.learning_center_full.entity.StudentInfo;
@@ -16,6 +21,7 @@ import uz.pdp.learning_center_full.entity.enums.LessonStatus;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
 import uz.pdp.learning_center_full.exception.DuplicateValueException;
 import uz.pdp.learning_center_full.repository.AttendanceRepository;
+import uz.pdp.learning_center_full.repository.GroupRepository;
 import uz.pdp.learning_center_full.repository.LessonRepository;
 import uz.pdp.learning_center_full.repository.StudentRepository;
 
@@ -29,6 +35,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final LessonRepository lessonRepository;
     private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
 
     public AttendanceResponse create(AttendanceCr attendanceDto) {
         checkLesson(attendanceDto.getLessonId());
@@ -117,16 +124,23 @@ public class AttendanceService {
 
         return lessonAttendanceResponseList;
     }
-    public List<LessonAttendanceResponse> getAllAttendancesWithLesson(UUID groupId) {
-        List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);
+    public List<LessonAttendanceResponse> getAllAttendancesWithLesson(UUID groupId , int page,int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LessonEntity> allByGroupId = lessonRepository.findAllByGroupId(pageable, groupId);
         List<LessonAttendanceResponse> lessonAttendanceResponseList = new ArrayList<>();
-        for (LessonEntity lesson : lessonEntityList) {
+        for (LessonEntity lesson : allByGroupId) {
+            if (lesson.getModule()==groupRepository.findById(groupId).get().getModule()){
             LessonAttendanceResponse lessonAttendanceResponse = new LessonAttendanceResponse();
             lessonAttendanceResponse.setLessonResponse(modelMapper.map(lesson, LessonResponse.class));
             lessonAttendanceResponse.setAttendanceResponseList(getAttendancesByLessonId(lesson.getId()));
-            lessonAttendanceResponseList.add(lessonAttendanceResponse);
+            lessonAttendanceResponseList.add(lessonAttendanceResponse);}
         }
         System.out.println("lessonAttendanceResponseList = " + lessonAttendanceResponseList);
         return lessonAttendanceResponseList;
     }
+
+//    Pageable pageable = PageRequest.of(page, size);
+//    List<ApplicationEntity> applications = applicationRepository.findAllByStatus(pageable,status).getContent();
+//        return modelMapper.map(applications, new TypeToken<List<ApplicationResponse>>(){}.getType());
+
 }
