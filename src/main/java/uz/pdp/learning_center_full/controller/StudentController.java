@@ -23,8 +23,8 @@ public class StudentController {
     private final AttendanceService attendanceService;
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/get_students_by_rating")
-    public ResponseEntity<List<StudentResponse>> getStudentByRating(UUID groupId){
-        return ResponseEntity.status(200).body(studentService.getStudentByRating(groupId));
+    public ResponseEntity<List<StudentResponse>> getStudentByRating(Principal principal){
+        return ResponseEntity.status(200).body(studentService.getStudentByRating(principal));
     }
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/my-attendance")

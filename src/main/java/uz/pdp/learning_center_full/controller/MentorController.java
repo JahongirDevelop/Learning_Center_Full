@@ -25,17 +25,19 @@ public class MentorController {
     private final LessonService lessonService;
     private final AttendanceService attendanceService;
     private final GroupService groupService;
-
-    @PreAuthorize(" hasRole('MENTOR') ")
-    @GetMapping("/mentor-groups/{mentor_id}")
-    public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
-        return groupService.getByMentorId(mentor_id);
+    @PreAuthorize("hasRole('MENTOR') ")
+    @PostMapping("/finish_lesson")
+    public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
+        return lessonService.finishLesson(attendanceCrList);
     }
 
-    private final MentorService mentorService;
 
-
-
+    @PreAuthorize("hasRole('MENTOR') ")
+    @PostMapping("/start_lesson{lessonId}/{groupId}")
+    public ResponseEntity<LessonResponse>  startLesson(
+            @PathVariable UUID lessonId, @PathVariable UUID groupId){
+        return lessonService.startLesson(lessonId, groupId);
+    }
     @PreAuthorize(" hasRole('MENTOR') ")
 
     @GetMapping("getAllAttendancesWithLessonInLastModule{group_id}")
@@ -70,17 +72,12 @@ public class MentorController {
     public ResponseEntity<List<LessonResponse>> getAll(@PathVariable UUID groupId) {
         return ResponseEntity.status(200).body(lessonService.getLesson(groupId));
     }
-    @PreAuthorize("hasRole('MENTOR') ")
-    @PostMapping("/start_lesson{lessonId}/{groupId}")
-    public ResponseEntity<LessonResponse>  startLesson(
-            @PathVariable UUID lessonId, @PathVariable UUID groupId){
-        return lessonService.startLesson(lessonId, groupId);
+    @PreAuthorize(" hasRole('MENTOR') ")
+    @GetMapping("/mentor-groups/{mentor_id}")
+    public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
+        return groupService.getByMentorId(mentor_id);
     }
 
-    @PreAuthorize("hasRole('MENTOR') ")
-    @PostMapping("/finish_lesson")
-    public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
-        return lessonService.finishLesson(attendanceCrList);
-    }
+
 
 }

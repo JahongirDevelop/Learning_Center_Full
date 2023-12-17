@@ -225,7 +225,6 @@ public class StudentService {
             respons.setGroupId(student.getGroupId());}
             }
         }
-
         studentRepository.findAllByGroupId(groupId,Sort.by(Sort.Direction.ASC, "rating"));
         return responses;
 
@@ -256,6 +255,26 @@ public class StudentService {
         studentProfile.setMentorSurname(mentor.getSurname());
         studentProfile.setRating(byId.getRating());
         return  ResponseEntity.ok(studentProfile);
+    }
+    public List<StudentResponse> getStudentByRating(Principal principal){
+        StudentInfo studentInfo = studentRepository.findStudentInfoByUserEntityId(UUID.fromString(principal.getName()))
+                .orElseThrow(() -> new DataNotFoundException("Student not found"));
+        List<StudentInfo> students = studentRepository.findAllByGroupId(studentInfo.getGroupId());
+        List<UserEntity> userEntities = new ArrayList<>();
+        for (StudentInfo student : students) {
+            userEntities.add(student.getUserEntity());
+        }
+        List<StudentResponse> responses = modelMapper.map(userEntities, new TypeToken<List<StudentResponse>>() {}.getType());
+        for (StudentResponse respons : responses) {
+            for (StudentInfo student : students) {
+                if(student.getUserEntity().getId().equals(respons.getId())){
+                    respons.setRating(student.getRating());
+                    respons.setGroupId(student.getGroupId());}
+            }
+        }
+        studentRepository.findAllByGroupId(studentInfo.getGroupId(),Sort.by(Sort.Direction.ASC, "rating"));
+        return responses;
+
     }
 
 

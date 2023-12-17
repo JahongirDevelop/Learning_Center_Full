@@ -3,11 +3,11 @@ package uz.pdp.learning_center_full.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.config.jwt.JwtService;
 import uz.pdp.learning_center_full.dto.request.AuthDto;
 import uz.pdp.learning_center_full.dto.request.UserCr;
+import uz.pdp.learning_center_full.dto.request.UserUpdate;
 import uz.pdp.learning_center_full.dto.response.JwtResponse;
 import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
@@ -22,6 +22,7 @@ import uz.pdp.learning_center_full.repository.StudentRepository;
 import uz.pdp.learning_center_full.repository.UserRepository;
 
 import java.security.Principal;
+import java.util.Objects;
 import java.util.UUID;
 
 import static uz.pdp.learning_center_full.entity.enums.UserRole.*;
@@ -46,22 +47,17 @@ public class UserService {
     }
 
     public JwtResponse signIn(AuthDto dto) {
-        UserEntity user = userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new DataNotFoundException("user not found"));
+        UserEntity user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new DataNotFoundException("user not found"));
         if (dto.getPassword().equals(user.getPassword())) {
             return new JwtResponse(jwtService.generateToken(user));
         }
         throw new AuthenticationCredentialsNotFoundException("password didn't match");
     }
 
-//    public ResponseEntity<UserResponse> me(Principal principal) {
-//        //.
-//        UserEntity userEntity = userRepository.findById(UUID.fromString(principal.getName())).get();
-//        return ResponseEntity.ok(modelMapper.map(userEntity, UserResponse.class));
-//
-//    }
     public  <T> T me(Principal principal) {
         UserEntity userEntity = userRepository.findById(UUID.fromString(principal.getName()))
-                .orElseThrow(() -> new DataNotFoundException("User not found!"));;
+                .orElseThrow(() -> new DataNotFoundException("User not found!"));
         UserRole role = userEntity.getRole();
         if (role == STUDENT){
             StudentResponse studentResponse = modelMapper.map(userEntity,StudentResponse.class);
@@ -81,5 +77,24 @@ public class UserService {
             return (T)mentorResponse;
         }
         return (T) modelMapper.map(userEntity,UserResponse.class);
+    }
+    public Object update(UserUpdate userUpdate,Principal principal) {
+        UserEntity userEntity = userRepository.findById(UUID.fromString(principal.getName()))
+                .orElseThrow(() -> new DataNotFoundException("User not found!"));
+
+        if(!Objects.equals(userUpdate.getName(),null)){
+            userEntity.setName(userUpdate.getName());
+        }if (!Objects.equals(userUpdate.getSurname(),null)) {
+            userEntity.setSurname(userUpdate.getSurname());
+        }if (!Objects.equals(userUpdate.getPhoneNumber(),null)) {
+            userEntity.setPhoneNumber(userUpdate.getPhoneNumber());
+        }if (!Objects.equals(userUpdate.getEmail(),null)) {
+            userEntity.setEmail(userUpdate.getEmail());
+        }if (!Objects.equals(userUpdate.getPassword(),null)) {
+            userEntity.setPassword(userUpdate.getPassword());
+        }
+        UserEntity userEntity1 = userRepository.save(userEntity);
+        return modelMapper.map(userEntity1,UserResponse.class);
+
     }
 }
