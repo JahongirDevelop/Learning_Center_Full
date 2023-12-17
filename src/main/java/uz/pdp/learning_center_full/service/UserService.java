@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.config.jwt.JwtService;
 import uz.pdp.learning_center_full.dto.request.AuthDto;
 import uz.pdp.learning_center_full.dto.request.UserCr;
+import uz.pdp.learning_center_full.dto.request.UserUpdate;
 import uz.pdp.learning_center_full.dto.response.JwtResponse;
 import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.dto.response.StudentResponse;
@@ -23,6 +24,7 @@ import uz.pdp.learning_center_full.exception.DataNotFoundException;
 import uz.pdp.learning_center_full.repository.*;
 
 import java.security.Principal;
+import java.util.Objects;
 import java.util.UUID;
 
 import static uz.pdp.learning_center_full.entity.enums.UserRole.*;
@@ -112,5 +114,23 @@ public class UserService {
                 throw new BadRequestException("Super Admin cannot deleted");
             }
         }
+    }
+
+    public UserResponse update(UserUpdate userUpdate, Principal principal) {
+        UserEntity userEntity1 = userRepository.findById(UUID.fromString(principal.getName())).
+                orElseThrow(() -> new DataNotFoundException("Admin not found!"));
+        if(!Objects.equals(userUpdate.getName(),null)){
+            userEntity1.setName(userUpdate.getName());
+        }if(!Objects.equals(userUpdate.getSurname(),null)){
+            userEntity1.setSurname(userUpdate.getSurname());
+        }if(!Objects.equals(userUpdate.getPhoneNumber(),null)){
+            userEntity1.setPhoneNumber(userUpdate.getPhoneNumber());
+        }if(!Objects.equals(userUpdate.getEmail(),null)){
+            userEntity1.setEmail(userUpdate.getEmail());
+        }if(!Objects.equals(userUpdate.getPassword(),null)){
+            userEntity1.setPassword(userUpdate.getPassword());
+        }
+        UserEntity entity = userRepository.save(userEntity1);
+        return modelMapper.map(entity,UserResponse.class);
     }
 }

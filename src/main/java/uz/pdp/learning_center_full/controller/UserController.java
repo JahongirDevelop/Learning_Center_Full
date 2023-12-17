@@ -36,7 +36,7 @@ public class UserController {
 
     @PermitAll
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody UserUpdate userUpdate,Principal principal){
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdate userUpdate,Principal principal){
         return ResponseEntity.ok(userService.update(userUpdate, principal));
     }
 
