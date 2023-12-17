@@ -12,5 +12,6 @@ public interface AttendanceRepository extends JpaRepository<AttendanceEntity, UU
     List<AttendanceEntity> findAllByStudentId(UUID id);
 
     List<AttendanceEntity> findAllByGroupId(UUID groupId);
+    void deleteByStudentId(UUID id);
     List<AttendanceEntity> findAllByLessonId(UUID lessonId);
 }
