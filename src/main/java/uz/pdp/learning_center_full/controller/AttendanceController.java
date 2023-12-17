@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.response.LessonAttendanceResponse;
+import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.dto.response.UserResponse;
 import uz.pdp.learning_center_full.service.AttendanceService;
 
@@ -40,11 +41,21 @@ public class AttendanceController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
 
-    @GetMapping("getAllAttendancesWithLesson{group_id}")
-    public ResponseEntity<List<LessonAttendanceResponse>> getAllAttendancesWithLesson(
+    @GetMapping("getAllAttendancesWithLessonInLastModule{group_id}")
+    public ResponseEntity<List<LessonAttendanceResponse>> getAllAttendancesWithLessonInLastModule(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @PathVariable UUID group_id){
-        return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id));
+        return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id,page,size));
     }
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+//    @GetMapping("/get_all")
+//    public ResponseEntity<List<MentorResponse>> getAll(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size){
+//        return mentorService.getAll(page,size);
+//    }
+
 ///sdds
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")

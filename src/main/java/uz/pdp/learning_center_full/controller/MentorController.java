@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.learning_center_full.dto.request.AttendanceCr;
 import uz.pdp.learning_center_full.dto.request.MentorCr;
 import uz.pdp.learning_center_full.dto.request.MentorUpdate;
-import uz.pdp.learning_center_full.dto.response.MentorResponse;
-import uz.pdp.learning_center_full.dto.response.StudentProfile;
+import uz.pdp.learning_center_full.dto.response.*;
+import uz.pdp.learning_center_full.service.AttendanceService;
+import uz.pdp.learning_center_full.service.GroupService;
+import uz.pdp.learning_center_full.service.LessonService;
 import uz.pdp.learning_center_full.service.MentorService;
 
 import java.security.Principal;
@@ -18,46 +21,68 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/mentors")
 public class MentorController {
-    private final MentorService mentorService;
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create")
-    public ResponseEntity<MentorResponse> addMentor(@RequestBody MentorCr mentorCr) {
-        return mentorService.addMentor(mentorCr);
+
+    private final LessonService lessonService;
+    private final AttendanceService attendanceService;
+    private final GroupService groupService;
+
+    @PreAuthorize(" hasRole('MENTOR') ")
+    @GetMapping("/mentor-groups/{mentor_id}")
+    public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
+        return groupService.getByMentorId(mentor_id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/get_by_id/{mentor_id}")
-    public ResponseEntity<MentorResponse> getByID(@PathVariable UUID mentor_id){
-        return mentorService.getById(mentor_id);
-    }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/get_all")
-    public ResponseEntity<List<MentorResponse>> getAll(
+    @PreAuthorize(" hasRole('MENTOR') ")
+
+    @GetMapping("getAllAttendancesWithLessonInLastModule{group_id}")
+    public ResponseEntity<List<LessonAttendanceResponse>> getAllAttendancesWithLessonInLastModule(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
-        return mentorService.getAll(page,size);
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable UUID group_id){
+        return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id,page,size));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @DeleteMapping("/delete_by_id/{mentor_id}")
-    public ResponseEntity<String> deleteByID(@PathVariable UUID mentor_id){
-        return mentorService.deleteByID(mentor_id);
-    }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
-    @PutMapping("/update")
-    public ResponseEntity<MentorResponse> updateProfile(@RequestParam UUID mentorId, @RequestBody MentorUpdate mentorUp){
-        return mentorService.update(mentorId,mentorUp);
-    }
-    @PreAuthorize("hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/me")
-    public  ResponseEntity<MentorResponse> myProfile(Principal principal){
-        return mentorService.me(principal);
-    }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/get-mentors-by-course/{course_id}")
-    public ResponseEntity<List<MentorResponse>> getByCourseId( @PathVariable UUID course_id){
-       return mentorService.getByCourseId(course_id);
 
+
+    @PreAuthorize(" hasRole('MENTOR') ")
+    @GetMapping("getAttendanceWithLessonByModule")
+    public ResponseEntity<List<LessonAttendanceResponse>> getAttendanceWithLessonByModule(@RequestParam UUID group_id,@RequestParam Integer module){
+        System.out.println("module = " + module);
+        return ResponseEntity.ok(attendanceService.getAttendanceWithLessonByModule(group_id,module));
     }
+    @PreAuthorize(" hasRole('MENTOR') ")
+    @GetMapping("/get_All")
+    public ResponseEntity<List<LessonResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.status(200).body(lessonService.getAll(page, size));
+    }
+    @PreAuthorize(" hasRole('MENTOR') ")
+    @GetMapping("/{id}")
+    public ResponseEntity<LessonResponse> findById(@PathVariable UUID id) {
+        return ResponseEntity.status(200).body(lessonService.findById(id));
+    }
+    @PreAuthorize(" hasRole('MENTOR') ")
+    @GetMapping("/get-lessons/{groupId}")
+    public ResponseEntity<List<LessonResponse>> getAll(@PathVariable UUID groupId) {
+        return ResponseEntity.status(200).body(lessonService.getLesson(groupId));
+    }
+    @PreAuthorize("hasRole('MENTOR') ")
+    @PostMapping("/start_lesson{lessonId}/{groupId}")
+    public ResponseEntity<LessonResponse>  startLesson(
+            @PathVariable UUID lessonId, @PathVariable UUID groupId){
+        return lessonService.startLesson(lessonId, groupId);
+    }
+    @PreAuthorize("hasRole('MENTOR') ")
+    @PostMapping("/finish_lesson")
+    public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
+        return lessonService.finishLesson(attendanceCrList);
+    }
+
+
+
+
+
+
 
 
 }
