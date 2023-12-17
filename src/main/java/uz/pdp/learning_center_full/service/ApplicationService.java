@@ -34,19 +34,6 @@ public class ApplicationService {
     private final CourseRepository courseRepository;
     private final ApplicationRepository applicationRepository;
 
-//    public ApplicationResponse create(ApplicationCr applicationCR) {
-//        Optional<CourseEntity> course = courseRepository.findById(applicationCR.getCourseId());
-//        if (course.isEmpty()) {
-//            throw new DataNotFoundException("course not found by this id " + applicationCR.getCourseId());
-//        } else if (applicationRepository.existsByEmail(applicationCR.getEmail()) &&
-//                applicationRepository.existsByCourseId(applicationCR.getCourseId())) {
-//            throw new DuplicateValueException("You have already sent application this course!");
-//        }
-//        ApplicationEntity applicationEntity = modelMapper.map(applicationCR, ApplicationEntity.class);
-//        applicationEntity.setStatus(UNCHECKED);
-//        return modelMapper.map(applicationRepository.save(applicationEntity), ApplicationResponse.class);
-//    }
-
     public ApplicationResponse create(ApplicationCr applicationCR) {
         validateApplication(applicationCR);
         Optional<CourseEntity> course = courseRepository.findById(applicationCR.getCourseId());
@@ -63,7 +50,6 @@ public class ApplicationService {
 
     private void validateApplication(ApplicationCr applicationCR) {
         validateEmail(applicationCR.getEmail());
-        // Add other validations if needed
     }
 
     private void validateEmail(String email) {
@@ -87,14 +73,6 @@ public class ApplicationService {
                 .orElseThrow(() -> new DataNotFoundException("Application not found with this id " + applicationId));
         return ResponseEntity.ok(modelMapper.map(applicationEntity,ApplicationResponse.class));
     }
-
-//    public ResponseEntity<ApplicationResponse> confirm(UUID applicationId) {
-//        ApplicationEntity application = applicationRepository.findById(applicationId)
-//                .orElseThrow(() -> new DataNotFoundException("Application not found with this id " + applicationId));
-//        application.setStatus(ApplicationStatus.CHECKED);
-//        applicationRepository.save(application);
-//        return ResponseEntity.ok(modelMapper.map(application,ApplicationResponse.class));
-//    }
 
     public List<ApplicationResponse> getAllByStatus(int page, int size,ApplicationStatus status) {
         Pageable pageable = PageRequest.of(page, size);

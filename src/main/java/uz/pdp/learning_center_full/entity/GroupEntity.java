@@ -20,7 +20,6 @@ import java.util.UUID;
 public class GroupEntity extends BaseEntity {
     private String groupName;
     @Max(value = 20, message = "20 tadan ko'p bola xonaga sig'maydi")
-    @Min(value = 10, message = "10 ta bolaga dars o'tish qoplamaydi")
     private Integer studentCount;
     private UUID courseId;
     private UUID mentorId;

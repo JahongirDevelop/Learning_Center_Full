@@ -46,6 +46,12 @@ public class UserController {
         return ResponseEntity.ok(userService.me(principal));
     }
 
+    @PermitAll
+    @GetMapping("/delete")
+    public  ResponseEntity<Object> delete(Principal principal){
+        return ResponseEntity.status(200).body(userService.delete(principal));
+    }
+
     @PostMapping("/create-application")
     public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));
