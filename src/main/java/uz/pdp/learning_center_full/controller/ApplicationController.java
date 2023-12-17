@@ -21,11 +21,6 @@ public class ApplicationController {
     public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/get_application{id}")
-    public ResponseEntity<ApplicationResponse> getApplication(@PathVariable UUID id){
-        return applicationService.findById(id);
-    }
 
 }
 
