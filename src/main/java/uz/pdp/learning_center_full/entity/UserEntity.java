@@ -29,10 +29,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
-
-@Data
-
 public class UserEntity extends BaseEntity implements UserDetails {
    private String name;
    private String surname;

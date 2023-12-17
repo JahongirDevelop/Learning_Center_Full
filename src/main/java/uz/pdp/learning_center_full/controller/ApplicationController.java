@@ -2,6 +2,7 @@ package uz.pdp.learning_center_full.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.ApplicationCr;
 import uz.pdp.learning_center_full.dto.response.ApplicationResponse;
@@ -20,18 +21,19 @@ public class ApplicationController {
     public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));
     }
-
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get_application{id}")
     public ResponseEntity<ApplicationResponse> getApplication(@PathVariable UUID id){
         return applicationService.findById(id);
     }
-
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/getAll")
     public List<ApplicationResponse> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
         return applicationService.getAll(page, size);
     }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/getAllByStatus")
     public List<ApplicationResponse> getAllBYStatus(
             @RequestParam(defaultValue = "0") int page,
@@ -39,9 +41,5 @@ public class ApplicationController {
             @RequestParam ApplicationStatus status){
         return applicationService.getAllByStatus(page, size,status);
     }
-    // add status, and related methods
-    @PostMapping("/confirm{application_id}")
-    public ResponseEntity<ApplicationResponse> confirmApplication(@PathVariable UUID application_id){
-        return applicationService.confirm(application_id);
-    }
 }
+

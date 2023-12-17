@@ -28,7 +28,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class LessonService {
-
+//.
 
     private final LessonRepository lessonRepository;
     private final ModelMapper modelMapper;
@@ -71,7 +71,7 @@ public class LessonService {
         lessonRepository.save(lessonEntity);
         GroupEntity group = groupRepository.findById(lessonEntity.getGroupId()).get();
         CourseEntity course = courseRepository.findById(group.getCourseId()).get();
-        System.out.println(course.getModule() + ", " + group.getModule());
+
         if(lessonEntity.getLessonNumber() == 12 && course.getModule() == group.getModule()){
             group.setStatus(GroupStatus.FINISHED);
             groupRepository.save(group);
@@ -88,6 +88,7 @@ public class LessonService {
             }
             groupRepository.save(group);
         }
+        System.out.println("attendanceCrList = " + attendanceCrList);
         return attendanceService.createAttendances(attendanceCrList);
     }
 

@@ -15,6 +15,7 @@ import java.util.List;
 public class AuthenticationService {
 
     public void authenticate(Claims claims, HttpServletRequest request) {
+        //..
         String userId = claims.getSubject();
         List<String> roles = (List<String>) claims.get("roles");
 

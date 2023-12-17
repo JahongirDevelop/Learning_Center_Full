@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Data
 public class ApplicationEntity extends BaseEntity{
     private String name;
     private String surname;

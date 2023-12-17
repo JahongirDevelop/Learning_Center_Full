@@ -1,5 +1,6 @@
 package uz.pdp.learning_center_full.dto.response;
 
+
 import lombok.*;
 import uz.pdp.learning_center_full.entity.enums.ApplicationStatus;
 
@@ -12,6 +13,8 @@ import java.util.UUID;
 @Setter
 @Builder
 public class ApplicationResponse {
+
+
     private String name;
     private String surname;
     private String phoneNumber;
@@ -19,5 +22,6 @@ public class ApplicationResponse {
     private ApplicationStatus status;
     private UUID courseId;
     private UUID id;
+
 
 }
