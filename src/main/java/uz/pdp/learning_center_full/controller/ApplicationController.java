@@ -21,25 +21,6 @@ public class ApplicationController {
     public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/get_application{id}")
-    public ResponseEntity<ApplicationResponse> getApplication(@PathVariable UUID id){
-        return applicationService.findById(id);
-    }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/getAll")
-    public List<ApplicationResponse> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
-        return applicationService.getAll(page, size);
-    }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/getAllByStatus")
-    public List<ApplicationResponse> getAllBYStatus(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam ApplicationStatus status){
-        return applicationService.getAllByStatus(page, size,status);
-    }
+
 }
 

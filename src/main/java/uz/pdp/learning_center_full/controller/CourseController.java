@@ -20,13 +20,7 @@ import java.util.UUID;
 public class CourseController {
     private final CourseService courseService;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
 
-    @PostMapping("/create")
-    public ResponseEntity<CourseResponse> create(@RequestBody @Valid CourseCr courseCr) {
-        return ResponseEntity.ok(courseService.create(courseCr));
-
-    }
     @PermitAll
     @GetMapping("/get_by_id/{course_id}")
     public ResponseEntity<CourseResponse> findById(@PathVariable UUID course_id) {
@@ -40,10 +34,6 @@ public class CourseController {
         return courseService.getAll(page,size);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @DeleteMapping("/delete_by_id/{course_id}")
-    public ResponseEntity<String> deleteById(@PathVariable UUID course_id){
-        return courseService.deleteById(course_id);
-    }
+
 
 }

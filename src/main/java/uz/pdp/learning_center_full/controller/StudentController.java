@@ -28,6 +28,7 @@ public class StudentController {
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentCR studentCR) {
         return ResponseEntity.status(200).body(studentService.create(studentCR));
     }
+
     @PreAuthorize("hasRole('ADMIN')  or hasRole('STUDENT') or hasRole('SUPER_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<StudentResponse> update(
