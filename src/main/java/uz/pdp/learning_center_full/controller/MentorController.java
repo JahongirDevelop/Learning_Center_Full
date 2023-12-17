@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import uz.pdp.learning_center_full.dto.request.AttendanceCr;
 import uz.pdp.learning_center_full.dto.request.MentorCr;
 import uz.pdp.learning_center_full.dto.request.MentorUpdate;
@@ -11,6 +12,9 @@ import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.service.AttendanceService;
 import uz.pdp.learning_center_full.service.GroupService;
 import uz.pdp.learning_center_full.service.LessonService;
+
+import uz.pdp.learning_center_full.dto.request.MentorUpdate;
+import uz.pdp.learning_center_full.dto.response.MentorResponse;
 import uz.pdp.learning_center_full.service.MentorService;
 
 import java.security.Principal;
@@ -22,6 +26,7 @@ import java.util.UUID;
 @RequestMapping("api/v1/mentors")
 public class MentorController {
 
+
     private final LessonService lessonService;
     private final AttendanceService attendanceService;
     private final GroupService groupService;
@@ -31,6 +36,10 @@ public class MentorController {
     public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
         return groupService.getByMentorId(mentor_id);
     }
+
+    private final MentorService mentorService;
+
+
 
     @PreAuthorize(" hasRole('MENTOR') ")
 
@@ -72,11 +81,13 @@ public class MentorController {
             @PathVariable UUID lessonId, @PathVariable UUID groupId){
         return lessonService.startLesson(lessonId, groupId);
     }
+
     @PreAuthorize("hasRole('MENTOR') ")
     @PostMapping("/finish_lesson")
     public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
         return lessonService.finishLesson(attendanceCrList);
-    }
+
+ 
 
 
 

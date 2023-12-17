@@ -96,6 +96,7 @@ public class AttendanceService {
 
     }
     public List<LessonAttendanceResponse> getAttendanceWithLessonByModule(UUID groupId,Integer module){
+
         System.out.println("module = " + module);
 //        int modulee = 1;
         List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);

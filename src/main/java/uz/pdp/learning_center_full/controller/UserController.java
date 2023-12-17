@@ -23,7 +23,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService ;
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/create-admin")
     public ResponseEntity<UserResponse> createAdmin(@Valid @RequestBody UserCr studentCR) {
         return ResponseEntity.status(200).body(userService.addAdmin(studentCR));
@@ -34,9 +34,10 @@ public class UserController {
     public JwtResponse signIn(@Valid @RequestBody AuthDto dto) {
         return userService.signIn(dto);
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/admin-me")
-    public  ResponseEntity<UserResponse> myProfile(Principal principal){
-        return userService.me(principal);
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @PermitAll
+    @GetMapping("/me")
+    public  ResponseEntity<Object> myProfile(Principal principal){
+        return ResponseEntity.ok(userService.me(principal));
     }
 }

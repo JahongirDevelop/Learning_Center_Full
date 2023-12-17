@@ -33,11 +33,11 @@ public class AttendanceController {
 //            @PathVariable UUID student_id) {
 //        return ResponseEntity.ok(attendanceService.getStudentAttendances(student_id));
 //    }
-    @PreAuthorize("hasRole('STUDENT') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/my-attendance")
-    public  ResponseEntity<List<LessonAttendanceResponse>> studentAttendances(Principal principal){
-        return ResponseEntity.ok(attendanceService.getStudentAttendances(UUID.fromString(principal.getName())));
-    }
+//    @PreAuthorize("hasRole('STUDENT') or hasRole('SUPER_ADMIN')")
+//    @GetMapping("/my-attendance")
+//    public  ResponseEntity<List<LessonAttendanceResponse>> studentAttendances(Principal principal){
+//        return ResponseEntity.ok(attendanceService.getStudentAttendances(UUID.fromString(principal.getName())));
+//    }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR') or hasRole('SUPER_ADMIN')")
 
