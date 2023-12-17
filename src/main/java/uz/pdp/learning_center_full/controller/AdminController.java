@@ -1,7 +1,6 @@
 package uz.pdp.learning_center_full.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,8 +55,10 @@ public class AdminController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("getAllAttendancesWithLesson/{group_id}")
     public ResponseEntity<List<LessonAttendanceResponse>> getAllAttendancesWithLesson(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @PathVariable UUID group_id){
-        return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id));
+        return ResponseEntity.ok(attendanceService.getAllAttendancesWithLesson(group_id, page,size ));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
