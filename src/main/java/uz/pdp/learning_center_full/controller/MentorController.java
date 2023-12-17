@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.learning_center_full.dto.request.MentorCr;
 import uz.pdp.learning_center_full.dto.request.MentorUpdate;
 import uz.pdp.learning_center_full.dto.response.MentorResponse;
-import uz.pdp.learning_center_full.dto.response.StudentProfile;
 import uz.pdp.learning_center_full.service.MentorService;
 
 import java.security.Principal;
@@ -19,11 +17,11 @@ import java.util.UUID;
 @RequestMapping("api/v1/mentors")
 public class MentorController {
     private final MentorService mentorService;
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create")
-    public ResponseEntity<MentorResponse> addMentor(@RequestBody MentorCr mentorCr) {
-        return mentorService.addMentor(mentorCr);
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/create")
+//    public ResponseEntity<MentorResponse> addMentor(@RequestBody MentorCr mentorCr) {
+//        return mentorService.addMentor(mentorCr);
+//    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_by_id/{mentor_id}")
@@ -55,7 +53,7 @@ public class MentorController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @GetMapping("/get-mentors-by-course/{course_id}")
     public ResponseEntity<List<MentorResponse>> getByCourseId( @PathVariable UUID course_id){
-       return mentorService.getByCourseId(course_id);
+       return mentorService.getMentorByCourseId(course_id);
 
     }
 

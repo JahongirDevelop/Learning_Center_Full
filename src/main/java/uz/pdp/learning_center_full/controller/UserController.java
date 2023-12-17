@@ -23,7 +23,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService ;
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/create-admin")
     public ResponseEntity<UserResponse> createAdmin(@Valid @RequestBody UserCr studentCR) {
         return ResponseEntity.status(200).body(userService.addAdmin(studentCR));

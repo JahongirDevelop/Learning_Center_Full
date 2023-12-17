@@ -3,7 +3,6 @@ package uz.pdp.learning_center_full.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,19 +11,15 @@ import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.MentorCr;
 import uz.pdp.learning_center_full.dto.request.MentorUpdate;
 import uz.pdp.learning_center_full.dto.response.MentorResponse;
-import uz.pdp.learning_center_full.dto.response.StudentProfile;
-import uz.pdp.learning_center_full.dto.response.StudentResponse;
 import uz.pdp.learning_center_full.entity.CourseEntity;
 import uz.pdp.learning_center_full.entity.MentorInfo;
 import uz.pdp.learning_center_full.entity.UserEntity;
 import uz.pdp.learning_center_full.entity.enums.UserRole;
 import uz.pdp.learning_center_full.exception.DataNotFoundException;
-import uz.pdp.learning_center_full.exception.DuplicateValueException;
 import uz.pdp.learning_center_full.repository.CourseRepository;
 import uz.pdp.learning_center_full.repository.MentorRepository;
 import uz.pdp.learning_center_full.repository.UserRepository;
 
-import java.lang.reflect.Type;
 import java.security.Principal;
 import java.util.*;
 
@@ -154,7 +149,7 @@ public class MentorService {
         return ResponseEntity.ok(mentorResponse);
     }
 
-    public ResponseEntity<List<MentorResponse>> getByCourseId(UUID courseId) {
+    public ResponseEntity<List<MentorResponse>> getMentorByCourseId(UUID courseId) {
         CourseEntity courseEntity = courseRepository.findById(courseId).get();
         List<MentorInfo> mentorInfos = mentorRepository.findAllBySubject(courseEntity.getSubject());
         List<MentorResponse> mentorResponses = new ArrayList<>();
