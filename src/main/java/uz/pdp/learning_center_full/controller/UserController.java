@@ -34,9 +34,10 @@ public class UserController {
     public JwtResponse signIn(@Valid @RequestBody AuthDto dto) {
         return userService.signIn(dto);
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/admin-me")
-    public  ResponseEntity<UserResponse> myProfile(Principal principal){
-        return userService.me(principal);
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @PermitAll
+    @GetMapping("/me")
+    public  ResponseEntity<Object> myProfile(Principal principal){
+        return ResponseEntity.ok(userService.me(principal));
     }
 }
