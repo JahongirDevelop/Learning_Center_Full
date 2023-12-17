@@ -1,5 +1,6 @@
 package uz.pdp.learning_center_full.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import uz.pdp.learning_center_full.entity.enums.GroupStatus;
 
@@ -12,11 +13,9 @@ import java.util.UUID;
 @Getter
 @Builder
 public class UpdateGroupDto {
-
+    @NotNull
     private String groupName;
-    private UUID courseId;
+    @NotNull
     private UUID mentorId;
-    private Integer studentCount;
-    private GroupStatus status;
 
 }

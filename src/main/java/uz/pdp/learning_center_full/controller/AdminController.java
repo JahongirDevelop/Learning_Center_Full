@@ -1,9 +1,11 @@
 package uz.pdp.learning_center_full.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.*;
 import uz.pdp.learning_center_full.dto.response.*;
@@ -95,6 +97,13 @@ public class AdminController {
     public List<GroupResponse> getAvailableGroupsByCourseId(@PathVariable UUID course_id){
         return groupService.getAvailableGroupsByCourseId(course_id);
     }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @PutMapping("/update-group/{groupId}")
+    public ResponseEntity<GroupResponse> update(@PathVariable @NotNull UUID groupId,
+                                                 @Validated @RequestBody UpdateGroupDto updateGroupDto){
+        return ResponseEntity.status(200).body(groupService.update(groupId, updateGroupDto));
+    }
+
 
     // mentor
 

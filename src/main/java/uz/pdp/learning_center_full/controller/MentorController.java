@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import uz.pdp.learning_center_full.dto.request.AttendanceCr;
 import uz.pdp.learning_center_full.dto.response.*;
 import uz.pdp.learning_center_full.service.AttendanceService;
 import uz.pdp.learning_center_full.service.GroupService;
 import uz.pdp.learning_center_full.service.LessonService;
-
 import uz.pdp.learning_center_full.service.MentorService;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -25,16 +22,13 @@ public class MentorController {
     private final LessonService lessonService;
     private final AttendanceService attendanceService;
     private final GroupService groupService;
+    private final MentorService mentorService;
 
     @PreAuthorize(" hasRole('MENTOR') ")
     @GetMapping("/mentor-groups/{mentor_id}")
     public List<GroupResponse> getByMentorID(@PathVariable UUID mentor_id){
         return groupService.getByMentorId(mentor_id);
     }
-
-    private final MentorService mentorService;
-
-
 
     @PreAuthorize(" hasRole('MENTOR') ")
 

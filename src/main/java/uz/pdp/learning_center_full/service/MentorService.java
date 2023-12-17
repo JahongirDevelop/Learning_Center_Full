@@ -99,54 +99,6 @@ public class MentorService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting");
         }
-
-    }
-
-
-    public ResponseEntity<MentorResponse> update(UUID mentorId, MentorUpdate updatedMentorInfo) {
-        try {
-            Optional<MentorInfo> mentorInfoOptional = mentorRepository.findById(mentorId);
-
-            if (mentorInfoOptional.isPresent()) {
-                MentorInfo existingMentorInfo = mentorInfoOptional.get();
-                existingMentorInfo.setExperience(updatedMentorInfo.getExperience());
-                UUID userId = mentorInfoOptional.get().getUserEntity().getId();
-                Optional<UserEntity> byId = userRepository.findById(userId);
-                byId.get().setEmail(updatedMentorInfo.getEmail());
-                byId.get().setSurname(updatedMentorInfo.getSurname());
-                byId.get().setPassword(updatedMentorInfo.getPassword());
-                byId.get().setName(updatedMentorInfo.getName());
-                byId.get().setPhoneNumber(updatedMentorInfo.getPhoneNumber());
-                userRepository.save(byId.get());
-                mentorRepository.save(existingMentorInfo);
-                MentorResponse updatedMentorResponse = new MentorResponse();
-                updatedMentorResponse.setEmail(updatedMentorInfo.getEmail());
-                updatedMentorResponse.setSurname(updatedMentorInfo.getSurname());
-                updatedMentorResponse.setName(updatedMentorInfo.getName());
-                updatedMentorResponse.setPhoneNumber(updatedMentorInfo.getPhoneNumber());
-                        updatedMentorResponse.setId(existingMentorInfo.getId());
-                       updatedMentorResponse.setExperience(updatedMentorInfo.getExperience());
-                       updatedMentorResponse.setSalary(updatedMentorResponse.getSalary());
-                       updatedMentorResponse.setSubject(mentorInfoOptional.get().getSubject());
-                return ResponseEntity.status(HttpStatus.OK).body(updatedMentorResponse);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-
-    }
-
-
-    public ResponseEntity<MentorResponse> me(Principal principal) {
-        MentorInfo mentorEntity = mentorRepository.findMentorInfoByUserEntityId(UUID.fromString(principal.getName())).get();
-        UserEntity userEntity = userRepository.findById(mentorEntity.getUserEntity().getId()).get();
-        MentorResponse mentorResponse = new MentorResponse(userEntity.getName(),userEntity.getSurname(),
-                userEntity.getEmail(), userEntity.getPhoneNumber(),
-                mentorEntity.getExperience(),mentorEntity.getSubject(),mentorEntity.getSalary(),mentorEntity.getId());
-        return ResponseEntity.ok(mentorResponse);
     }
 
     public ResponseEntity<List<MentorResponse>> getMentorByCourseId(UUID courseId) {

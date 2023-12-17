@@ -14,8 +14,4 @@ import java.util.UUID;
 public interface MentorRepository extends JpaRepository<MentorInfo, UUID> {
     Optional<MentorInfo> findMentorInfoByUserEntityId(UUID uuid);
     List<MentorInfo> findAllBySubject(Subject subject);
-
-    void deleteMentorInfoByUserEntity(UserEntity user);
-
-    void deleteByUserEntityId(UUID uuid);
 }

@@ -12,8 +12,6 @@ import java.util.UUID;
 @Repository
 public interface ApplicationRepository extends JpaRepository<ApplicationEntity, UUID> {
 
-//    List<ApplicationEntity> findAllStatusWereCHECKED(Pageable pageable);
-
     Page<ApplicationEntity> findAllByStatus(Pageable pageable, ApplicationStatus status);
 
     boolean existsByEmail(String email);

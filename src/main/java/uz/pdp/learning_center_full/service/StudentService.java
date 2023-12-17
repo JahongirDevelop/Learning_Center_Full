@@ -37,7 +37,6 @@ public class StudentService {
     private final CourseService courseService;
     private final MailSenderService senderService;
     private final ModelMapper modelMapper;
-//    private final StudentService studentService;
     private final  GroupService groupService;
     private final MentorService mentorService;
 
@@ -142,46 +141,6 @@ public class StudentService {
         return responses;
     }
 
-    public StudentResponse updateById(UUID studentId, StudentUpdateDTO update) {
-        StudentInfo student = studentRepository
-                .findById(studentId)
-                .orElseThrow( () -> new DataNotFoundException("student not found"));
-
-        UserEntity userEntity = userRepository.findById(student.getUserEntity().getId())
-                .orElseThrow(() -> new DataNotFoundException("User not found"));
-
-        userEntity.setEmail(update.getEmail());
-        userEntity.setName(update.getName());
-        userEntity.setPassword(update.getPassword());
-        userEntity.setPhoneNumber(update.getPhoneNumber());
-        userEntity.setSurname(update.getSurname());
-        userEntity.setRole(UserRole.STUDENT);
-
-        student.setUserEntity(userEntity);
-        student.setRating(student.getRating());
-        student.setGroupId(student.getGroupId());
-        studentRepository.save(student);
-        return new StudentResponse(student.getRating(), userEntity.getName(),
-                userEntity.getSurname(), userEntity.getPhoneNumber(), userEntity.getEmail(),
-                student.getGroupId(), userEntity.getId());
-    }
-
-    public String deleteById(UUID studentId) {
-            Optional<StudentInfo> studentInfoOptional = studentRepository.findById(studentId);
-            if (studentInfoOptional.isPresent()) {
-                StudentInfo studentInfo = studentInfoOptional.get();
-                studentRepository.deleteById(studentId);
-                UserEntity userEntity = studentInfo.getUserEntity();
-                if (userEntity != null) {
-                    userRepository.deleteById(userEntity.getId());
-                }
-                return "Deleted";
-            } else {
-                throw new DataNotFoundException("Student Not found");
-            }
-        }
-
-
     private boolean checkStudentIsExist(StudentCR studentCR){
         List<UserEntity> userEntities = userRepository.findByName(studentCR.getName());
         for (UserEntity entity : userEntities) {
@@ -193,9 +152,7 @@ public class StudentService {
         }return false;
     }
 
-
     public List<StudentResponse> getByGroupId(UUID groupId) {
-
         List<StudentInfo> studentInfoList = studentRepository.findAllByGroupId(groupId);
         List<StudentResponse> studentResponses = studentInfoList.stream()
                 .map(student -> new StudentResponse(
@@ -240,25 +197,6 @@ public class StudentService {
                 studentEntity.getGroupId(),studentEntity.getId());
         return ResponseEntity.ok(studentresponse);
     }
-    public ResponseEntity<StudentProfile> me(Principal principal){
-        StudentProfile studentProfile = new StudentProfile();
-        StudentResponse byId = getById(UUID.fromString(principal.getName())).getBody();
-        GroupResponse group = groupService.findById(byId.getGroupId());
-        CourseResponse course = courseService.findById(group.getCourseId()).getBody();
-        MentorResponse mentor = mentorService.getById(group.getMentorId()).getBody();
-        studentProfile.setName(byId.getName());
-        studentProfile.setSurname(byId.getSurname());
-        Subject subject = course.getSubject();
-        studentProfile.setCourseName(subject.name());
-        studentProfile.setGroupName(group.getGroupName());
-        studentProfile.setGroupName(group.getGroupName());
-        studentProfile.setMentorName(mentor.getName());
-        studentProfile.setMentorSurname(mentor.getSurname());
-        studentProfile.setRating(byId.getRating());
-        return  ResponseEntity.ok(studentProfile);
-    }
-
-
 
 
 }
