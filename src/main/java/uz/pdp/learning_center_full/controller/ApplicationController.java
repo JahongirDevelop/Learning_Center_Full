@@ -2,11 +2,9 @@ package uz.pdp.learning_center_full.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.learning_center_full.dto.request.ApplicationCr;
 import uz.pdp.learning_center_full.dto.response.ApplicationResponse;
-import uz.pdp.learning_center_full.entity.enums.ApplicationStatus;
 import uz.pdp.learning_center_full.service.ApplicationService;
 
 import java.util.List;

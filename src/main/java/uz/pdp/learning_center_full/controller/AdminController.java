@@ -1,7 +1,6 @@
 package uz.pdp.learning_center_full.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,10 +18,8 @@ import java.util.UUID;
 @RequestMapping("api/v1/admin")
 public class AdminController {
     private final ApplicationService applicationService;
-    private final AttendanceService attendanceService;
     private final CourseService courseService;
     private final GroupService groupService;
-    private final LessonService lessonService;
     private final MentorService mentorService;
     private final StudentService studentService;
 
