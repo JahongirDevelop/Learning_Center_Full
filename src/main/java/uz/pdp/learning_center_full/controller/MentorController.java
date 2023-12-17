@@ -87,13 +87,5 @@ public class MentorController {
     public ResponseEntity<String> finishLesson(@RequestBody List<AttendanceCr> attendanceCrList){
         return lessonService.finishLesson(attendanceCrList);
 
- 
-
-
-
-
-
-
-
-
+}
 }
