@@ -9,11 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.pdp.learning_center_full.dto.request.AttendanceCr;
-import uz.pdp.learning_center_full.dto.response.ApplicationResponse;
 import uz.pdp.learning_center_full.dto.response.AttendanceResponse;
 import uz.pdp.learning_center_full.dto.response.LessonAttendanceResponse;
 import uz.pdp.learning_center_full.dto.response.LessonResponse;
-import uz.pdp.learning_center_full.entity.ApplicationEntity;
 import uz.pdp.learning_center_full.entity.AttendanceEntity;
 import uz.pdp.learning_center_full.entity.LessonEntity;
 import uz.pdp.learning_center_full.entity.StudentInfo;
@@ -124,7 +122,7 @@ public class AttendanceService {
 
         return lessonAttendanceResponseList;
     }
-    public List<LessonAttendanceResponse> getAllAttendancesWithLesson(UUID groupId , int page,int size) {
+    public List<LessonAttendanceResponse> getAllAttendancesWithLesson(UUID groupId,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<LessonEntity> allByGroupId = lessonRepository.findAllByGroupId(pageable, groupId);
         List<LessonAttendanceResponse> lessonAttendanceResponseList = new ArrayList<>();
