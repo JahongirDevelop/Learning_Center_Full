@@ -52,7 +52,6 @@ public class LessonService {
     }
     public  List<LessonResponse> getLesson(UUID groupId) {
         List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);
-        System.out.println("lessonEntityList = " + lessonEntityList);
         return modelMapper.map(lessonEntityList, new TypeToken<List<LessonResponse>>(){}.getType());
     }
     public ResponseEntity<LessonResponse> startLesson(UUID lessonId, UUID groupId) {
@@ -88,7 +87,6 @@ public class LessonService {
             }
             groupRepository.save(group);
         }
-        System.out.println("attendanceCrList = " + attendanceCrList);
         return attendanceService.createAttendances(attendanceCrList);
     }
 

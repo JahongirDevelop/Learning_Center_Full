@@ -41,7 +41,6 @@ public class AttendanceService {
         AttendanceEntity attendance = attendanceRepository.save(modelMapper.map(attendanceDto,AttendanceEntity.class));
         return modelMapper.map(attendance,AttendanceResponse.class);
     }
-//dofnvjd
     public List<LessonAttendanceResponse> getStudentAttendances(UUID id) {
 
         List<AttendanceEntity> attendanceEntityList = attendanceRepository.findAllByStudentId( studentRepository.findStudentInfoByUserEntityId(id).get().getId());
@@ -83,10 +82,7 @@ public class AttendanceService {
     private StudentInfo checkStudent(UUID studentId){
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Student not found by this Id " +  studentId));
-
     }
-
-
 
     public List<AttendanceResponse> getAttendancesByLessonId(UUID lessonId){
         List<AttendanceEntity> attendanceEntityList = attendanceRepository.findAllByLessonId(lessonId);
@@ -94,20 +90,9 @@ public class AttendanceService {
 
     }
     public List<LessonAttendanceResponse> getAttendanceWithLessonByModule(UUID groupId,Integer module){
-
-        System.out.println("module = " + module);
-//        int modulee = 1;
         List<LessonEntity> lessonEntityList = lessonRepository.findLessonEntitiesByGroupId(groupId);
-        System.out.println("lessonEntitiesByModule = " + lessonEntityList);
-
-//        for (LessonEntity lesson : lessonEntityList){
-//            if(lesson.getModule() > modulee){
-//                modulee = lesson.getModule();
-//            }
-//        }cd
         List<LessonEntity> lessonEntitiesByModule = lessonRepository.findLessonEntitiesByModule(module);
         List<LessonAttendanceResponse> lessonAttendanceResponseList = new ArrayList<>();
-
 
         for (LessonEntity lesson : lessonEntitiesByModule) {
             if(lesson.getLessonStatus() == LessonStatus.FINISHED){
@@ -118,7 +103,6 @@ public class AttendanceService {
             }
 
         }
-        System.out.println("lessonAttendanceResponseList = " + lessonAttendanceResponseList);
 
         return lessonAttendanceResponseList;
     }
@@ -133,12 +117,7 @@ public class AttendanceService {
             lessonAttendanceResponse.setAttendanceResponseList(getAttendancesByLessonId(lesson.getId()));
             lessonAttendanceResponseList.add(lessonAttendanceResponse);}
         }
-        System.out.println("lessonAttendanceResponseList = " + lessonAttendanceResponseList);
         return lessonAttendanceResponseList;
     }
-
-//    Pageable pageable = PageRequest.of(page, size);
-//    List<ApplicationEntity> applications = applicationRepository.findAllByStatus(pageable,status).getContent();
-//        return modelMapper.map(applications, new TypeToken<List<ApplicationResponse>>(){}.getType());
 
 }

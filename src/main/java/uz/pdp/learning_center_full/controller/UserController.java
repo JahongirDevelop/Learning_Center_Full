@@ -51,7 +51,6 @@ public class UserController {
         return ResponseEntity.status(200).body(userService.delete(principal));
     }
 
-
     @PostMapping("/create-application")
     public ResponseEntity<ApplicationResponse> create(@RequestBody ApplicationCr applicationCR){
         return ResponseEntity.ok(applicationService.create(applicationCR));

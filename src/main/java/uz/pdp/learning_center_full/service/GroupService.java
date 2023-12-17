@@ -71,7 +71,8 @@ public class GroupService {
     public GroupResponse update(UUID groupId, UpdateGroupDto updateGroupDto) {
         GroupEntity group = groupRepository.findById(groupId).orElseThrow(
                 () -> new DataNotFoundException("group not found"));
-        modelMapper.map(updateGroupDto, group);
+        group.setMentorId(updateGroupDto.getMentorId());
+        group.setGroupName(updateGroupDto.getGroupName());
         groupRepository.save(group);
          return modelMapper.map(group, GroupResponse.class);
     }
