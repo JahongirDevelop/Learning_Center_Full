@@ -1,10 +1,11 @@
 server:
   port: 8080
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:1}
+    password: ${DB_PASSWORD:}
     url: jdbc:postgresql://${DB_IP:localhost}:${DB_PORT:5432}/${DB_NAME:learning_center_full}
   jpa:
     hibernate:
@@ -18,16 +19,15 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: coursemanagmentt@gmail.com
-    password: rmtdqcbpmqabptsc
+    username: your_email@gmail.com
+    password: your_email_password
     properties:
-      mjaail:
-        smtp:
-          auth: true
       mail:
         smtp:
+          auth: true
           starttls:
             enable: true
+
 springdoc:
   api-docs:
     enabled: true
@@ -42,5 +42,4 @@ springdoc:
 
 jwt:
   expiry: 90000000
-  secret: gjhkoiutrefdsavzbxcnmktjyhretgwedfvbnjkrjyerhsfg
-
+  secret: your_jwt_secret
